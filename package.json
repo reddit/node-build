@@ -1,0 +1,25 @@
+{
+  "name": "@r/build",
+  "version": "0.0.1",
+  "description": "A webpack based build system that can make UMD modules, per-dependent server 'binarys', or full client ready scripts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schwers/r-build.git"
+  },
+  "keywords": [
+    "webpack",
+    "es6",
+    "es7",
+    "javascript"
+  ],
+  "author": "schwers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/schwers/r-build/issues"
+  },
+  "homepage": "https://github.com/schwers/r-build#readme"
+}
