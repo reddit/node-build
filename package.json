@@ -2,9 +2,11 @@
   "name": "@r/build",
   "version": "0.0.1",
   "description": "A webpack based build system that can make UMD modules, per-dependent server 'binarys', or full client ready scripts",
-  "main": "index.js",
+  "bin": {
+    "build": "./bin/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node ./bin/index.js"
   },
   "repository": {
     "type": "git",
@@ -14,12 +16,31 @@
     "webpack",
     "es6",
     "es7",
-    "javascript"
+    "javascript",
+    "babel"
   ],
   "author": "schwers",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/schwers/r-build/issues"
+  },
+  "dependencies": {
+    "babel-core": "^6.5.1",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-class-properties": "^6.5.0",
+    "babel-plugin-transform-react-constant-elements": "^6.5.0",
+    "babel-plugin-transform-react-inline-elements": "^6.5.0",
+    "babel-preset-es2015-native-modules": "^6.6.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-2": "^6.5.0",
+    "json-loader": "^0.5.4",
+    "node-notifier": "^4.5.0",
+    "webpack": "^2.1.0-beta.5",
+    "yargs": "^4.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.7.5",
+    "react": "^15.0.1"
   },
   "homepage": "https://github.com/schwers/r-build#readme"
 }
