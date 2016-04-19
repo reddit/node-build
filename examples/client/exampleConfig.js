@@ -10,8 +10,8 @@ module.exports = {
     {
       watch: false,
       buildName: 'ExampleClient',
-      devtool: 'source-map',
       webpackConfig: {
+        devtool: 'source-map',
         entry: { ExampleClient: './examples/client/client.es6.js' },
         output: {
           path: path.join(__dirname, 'bin'),
