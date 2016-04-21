@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var glob = require('glob');
 var path = require('path');
 var webfontsGenerator = require('webfonts-generator');
