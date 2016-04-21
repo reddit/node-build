@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 
@@ -7,14 +8,28 @@ var argv = require('yargs')
   .default('r', '../examples/client/exampleConfig')
   .argv;
 
-  function loadConfigFromPath(path) {
-    var builds = require(path);
-    if (!Array.isArray(builds)) {
-      builds = [ builds ];
-    }
 
-    return { builds: builds.map(makeBuild) };
+function loadRawConfigModule(path, extensions) {
+  var builds = require(path);
+  if (!Array.isArray(builds)) {
+    builds = [builds];
   }
+
+  return makeConfig(applyExtensions(builds, extensions));
+}
+
+function applyExtensions(builds, extensions) {
+  var ext = extensions || {};
+  return builds.map(function(build) { return _.extend(build, ext); });
+}
+
+function makeConfig(builds) {
+  return { builds: builds.map(makeBuild) };
+}
+
+function loadConfigFromPath(path, extensions) {
+  return loadRawConfigModule(path, extensions);
+}
 
 if (argv.rawconfig) {
   var config = loadConfigFromPath(argv.rawconfig);
