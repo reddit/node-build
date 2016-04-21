@@ -17,4 +17,12 @@ const Unused = (props) => {
   );
 };
 
+const AlsoUnused = (props) => {
+  return (
+    <div className='verify-im-not-included-either'>
+      <div className='foobar-tree-shaking' />
+    </div>
+  );
+};
+
 React.render(<Hello />, document.getElementById('react-container'));

@@ -1,9 +1,44 @@
 var webpack = require('webpack');
 var path = require('path');
+var makeBuild = require('../../lib/makeBuild').makeBuild;
 
 // simple manually build example config file that does es6 / es7 / JSX
 // along with tree shaking and generating source-maps
+// note the paths are because we want to be able to run npm run build from the top level directory
+module.exports = {
+  builds: [
+    makeBuild({
+      name: 'ExampleClient',
+      watch: true,
+      webpack: {
+        entry: './examples/client/client.es6.js',
+        output: {
+          generator: 'umd',
+          dest: './examples/client/bin',
+        },
+        resolve: {
+          generator: 'npm-and-modules',
+          extensions: ['', '.js', '.jsx', '.es6.js'],
+        },
+        loaders: [
+          'esnextreact',
+          'json',
+        ],
+        plugins: [
+          'bundle-common',
+          'production-loaders',
+          'set-node-env',
+          'minify-and-treeshake',
+          'node-load-sourcemaps',
+          'abort-if-errors',
+        ],
+      }
+    })
+  ]
+};
 
+
+/* The above will generate a config that looks something like this
 module.exports = {
   builds:
   [
@@ -11,11 +46,12 @@ module.exports = {
       watch: false,
       buildName: 'ExampleClient',
       webpackConfig: {
-        devtool: 'source-map',
         entry: { ExampleClient: './examples/client/client.es6.js' },
         output: {
           path: path.join(__dirname, 'bin'),
           filename :'[name].js',
+          libray: '[name].js'
+          libraryOfTarget: 'umd',
         },
         resolve: {
           extensions: ['', '.es6.js', '.jsx', '.js', '.json'],
@@ -87,3 +123,4 @@ module.exports = {
    }
  ]
 };
+*/
