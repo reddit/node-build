@@ -1,16 +1,20 @@
 var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 
 var argv = require('yargs')
   .alias('r', 'rawconfig')
   .describe('r', 'path to a raw-config via a node file with moduel.exports = config')
-  .default('r', '../examples/client/exampleConfig')
+  .default('r', './blueprints.config.js')
   .argv;
 
+console.log('starting');
+console.log('cwd', process.cwd());
 
-function loadRawConfigModule(path, extensions) {
-  var builds = require(path);
+function loadRawConfigModule(configPath, extensions) {
+  var builds = require(path.resolve(configPath));
   if (!Array.isArray(builds)) {
     builds = [builds];
   }

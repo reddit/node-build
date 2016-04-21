@@ -1,17 +1,11 @@
-var webpack = require('webpack');
-var path = require('path');
-
-// simple manually build example config file that does es6 / es7 / JSX
-// along with tree shaking and generating source-maps
-// note the paths are because we want to be able to run npm run build from the top level directory
 module.exports = {
   name: 'ExampleClient',
   watch: true,
   webpack: {
-    entry: './examples/client/client.es6.js',
+    entry: './client.es6.js',
     output: {
       generator: 'umd',
-      dest: './examples/client/bin',
+      dest: './bin',
     },
     resolve: {
       generator: 'npm-and-modules',
@@ -31,6 +25,18 @@ module.exports = {
     ],
   }
 };
+
+
+// var webpack = require('webpack');
+// var path = require('path');
+
+// this is a sample of what the blueprints.config.js gives you
+// if you were to manually make a webpack.config.json
+
+// simple manually build example config file that does es6 / es7 / JSX
+// along with tree shaking and generating source-maps
+// note the paths are because we want to be able to run npm run build from the top level directory
+
 
 
 /* The above will generate a config that looks something like this

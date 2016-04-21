@@ -1,13 +1,8 @@
 {
-  "name": "@r/build",
+  "name": "@r/blueprints",
   "version": "0.0.1",
   "description": "A webpack based build system that can make UMD modules, per-dependent server 'binarys', or full client ready scripts",
-  "bin": {
-    "build": "./bin/index.js"
-  },
-  "scripts": {
-    "build": "node ./bin/index.js"
-  },
+  "bin": "./bin/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/schwers/r-build.git"
