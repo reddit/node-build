@@ -23,6 +23,10 @@
   Min & gzipped sizes comapred to reddit-mobile?
   Reddit Mobile: 347 KB
   This: 42KB
+
+  Update: After adding less/css loaders the build size increased 4KB from 141KB minified
+  to 145KB. Really not sure what's happening, it looks like webpack add somes cruft for the loaders.
+  I'll try to find a better way to do that later.
 */
 import React from 'react';
 import ReactDom from 'react-dom';

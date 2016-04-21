@@ -2,7 +2,10 @@
   "name": "@r/blueprints",
   "version": "0.0.1",
   "description": "A webpack based build system that can make UMD modules, per-dependent server 'binarys', or full client ready scripts",
-  "bin": "./bin/index.js",
+  "bin": {
+    "blueprints": "./bin/buildBlueprints.js",
+    "webfonts": "./bin/buildWebfonts.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/schwers/r-build.git"
@@ -32,11 +35,13 @@
     "babel-preset-stage-2": "^6.5.0",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "glob": "^7.0.3",
     "json-loader": "^0.5.4",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
     "node-notifier": "^4.5.0",
     "style-loader": "^0.13.1",
+    "webfonts-generator": "^0.3.5",
     "webpack": "^2.1.0-beta.5",
     "yargs": "^4.6.0"
   },
