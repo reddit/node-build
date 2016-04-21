@@ -22,6 +22,7 @@
   "dependencies": {
     "babel-core": "^6.5.1",
     "babel-loader": "^6.2.4",
+    "babel-plugin-lodash": "^2.3.0",
     "babel-plugin-transform-class-properties": "^6.5.0",
     "babel-plugin-transform-react-constant-elements": "^6.5.0",
     "babel-plugin-transform-react-inline-elements": "^6.5.0",
@@ -35,7 +36,8 @@
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
-    "react": "^15.0.1"
+    "react": "^15.0.1",
+    "react-dom": "^15.0.1"
   },
   "homepage": "https://github.com/schwers/r-build#readme"
 }
