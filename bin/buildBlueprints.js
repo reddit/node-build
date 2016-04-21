@@ -46,7 +46,7 @@ function loadBuildsFromPath(configPath) {
 
 function applyExtensions(builds, extensions) {
   var ext = extensions || {};
-  return builds.map(function(build) { return _.extend(build, ext); });
+  return builds.map(function(build) { return _.extend(build, { webpack: ext }); });
 }
 
 function makeConfig(builds, extensions) {
