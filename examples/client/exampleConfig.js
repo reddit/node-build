@@ -1,40 +1,35 @@
 var webpack = require('webpack');
 var path = require('path');
-var makeBuild = require('../../lib/makeBuild').makeBuild;
 
 // simple manually build example config file that does es6 / es7 / JSX
 // along with tree shaking and generating source-maps
 // note the paths are because we want to be able to run npm run build from the top level directory
 module.exports = {
-  builds: [
-    makeBuild({
-      name: 'ExampleClient',
-      watch: true,
-      webpack: {
-        entry: './examples/client/client.es6.js',
-        output: {
-          generator: 'umd',
-          dest: './examples/client/bin',
-        },
-        resolve: {
-          generator: 'npm-and-modules',
-          extensions: ['', '.js', '.jsx', '.es6.js'],
-        },
-        loaders: [
-          'esnextreact',
-          'json',
-        ],
-        plugins: [
-          'bundle-common',
-          'production-loaders',
-          'set-node-env',
-          'minify-and-treeshake',
-          'node-load-sourcemaps',
-          'abort-if-errors',
-        ],
-      }
-    })
-  ]
+  name: 'ExampleClient',
+  watch: true,
+  webpack: {
+    entry: './examples/client/client.es6.js',
+    output: {
+      generator: 'umd',
+      dest: './examples/client/bin',
+    },
+    resolve: {
+      generator: 'npm-and-modules',
+      extensions: ['', '.js', '.jsx', '.es6.js'],
+    },
+    loaders: [
+      'esnextreact',
+      'json',
+    ],
+    plugins: [
+      'bundle-common',
+      'production-loaders',
+      'set-node-env',
+      'minify-and-treeshake',
+      'node-load-sourcemaps',
+      'abort-if-errors',
+    ],
+  }
 };
 
 
