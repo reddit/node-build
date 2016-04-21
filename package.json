@@ -20,6 +20,7 @@
     "url": "https://github.com/schwers/r-build/issues"
   },
   "dependencies": {
+    "autoprefixer": "^6.3.6",
     "babel-core": "^6.5.1",
     "babel-loader": "^6.2.4",
     "babel-plugin-lodash": "^2.3.0",
@@ -29,8 +30,13 @@
     "babel-preset-es2015-native-modules": "^6.6.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-2": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "json-loader": "^0.5.4",
+    "less": "^2.6.1",
+    "less-loader": "^2.2.3",
     "node-notifier": "^4.5.0",
+    "style-loader": "^0.13.1",
     "webpack": "^2.1.0-beta.5",
     "yargs": "^4.6.0"
   },

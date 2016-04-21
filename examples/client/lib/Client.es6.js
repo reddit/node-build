@@ -3,7 +3,7 @@
     : -w || --watch if you want to experiment
 
   if you're developing blueprints:
-      build with something like node ../../bin/index.js -i -c -p -w
+      build with something like node /../../bin/index.js -i -c -p -w
 
   The file size for this minifed, with React, React Dom, Lodash, and owrn own code is 141KB.
   Note how the production minifed build of React Dom on Facebooks site is 143KB,
@@ -27,14 +27,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import { omit } from 'lodash'; // mostly unused, thanks to the babel-lodash-loader
-
-const Hello = (props) => {
-  return (
-    <div className='foo'>
-      <div className='bar'>Hello</div>
-    </div>
-  );
-};
+import Hello from './components/Hello/Hello';
 
 const HelloWrapper = (props) => {
   const ommited = omit(props, 'ommited');
