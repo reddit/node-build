@@ -19,9 +19,9 @@ var argv = require('yargs')
   .alias('s', 'server')
     .describe('s', 'use the default server build, assumes you have an entry point to a server at ~/lib/server[some es6.js or .js or .jsx]')
     .default('s', false)
-  .alias('b', 'both')
-    .describe('b', '[DEFAULT=true] use both a client and a server build. checks if you have an extend build and applies it.')
-    .default('b', true)
+  .alias('a', 'clientAndServer')
+    .describe('a', '[DEFAULT=true] use both a client and a server build. checks if you have an extend build and applies it.')
+    .default('a', true)
   .alias('w', 'watch')
     .describe('w', '[DEFAULT=false] force watching of all builds')
     .default('w', false)
@@ -30,24 +30,31 @@ var argv = require('yargs')
     .default('i', false)
   .argv;
 
-console.log('starting');
-console.log('cwd', process.cwd());
+console.log('...Reading Blueprints', argv.blueprintsPath);
+console.log('...cwd', process.cwd());
 
 function loadBuildsFromPath(configPath) {
-  var builds = require(path.resolve(configPath));
-  if (!Array.isArray(builds)) {
-    if (builds.extensions === true) {
-      return { extensions: _.omit(builds, 'extensions') };
+  try {
+    console.log('...loading bluerprints from', configPath)
+    var builds = require(path.resolve(configPath));
+    if (!Array.isArray(builds)) {
+      if (builds.extensions === true) {
+        return { extensions: _.omit(builds, 'extensions') };
+      }
+      builds = [builds];
     }
-    builds = [builds];
-  }
 
-  return { builds }
+    return { builds }
+  } catch (e) {
+    console.trace(e);
+    return {};
+  }
 }
 
 function applyExtensions(builds, extensions) {
   var ext = extensions || {};
-  return builds.map(function(build) { return _.extend(build, { webpack: ext }); });
+  console.log('...applying extensions', extensions);
+  return builds.map(function(build) { return _.merge(build, ext ); });
 }
 
 function makeConfig(builds, extensions) {
@@ -58,20 +65,24 @@ var builds = [];
 var extensions = {};
 
 if (argv.blueprintsPath && !argv.ignoreBlueprints) {
-  var blueprints = loadBuildsFromPath(configPath);
+  var blueprints = loadBuildsFromPath(argv.blueprintsPath);
   if (blueprints.extensions) {
     extensions = blueprints.extensions;
-  } else if (blueprints.builds.length) {
+  } else if (blueprints.builds && blueprints.builds.length) {
     builds = blueprints.builds;
   }
 }
 
 function loadDefaultConfigs() {
+  console.log('...using default configs');
   if (argv.client) {
+    console.log('...client')
     builds = [ configs.getClientConfig(argv.production) ];
   } else if (argv.server) {
+    console.log('...server');
     builds = [ configs.getServerConfig(argv.production) ];
-  } else if (argv.both) {
+  } else if (argv.clientAndServer) {
+    console.log('...both');
     builds = [
       configs.getClientConfig(argv.production),
       configs.getServerConfig(argv.production),

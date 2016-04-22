@@ -2,7 +2,7 @@
 r/Build aims to be a configurable build system for ES6/7 projects based on on Webpack. Out of the box it includes some default configurations for building clients (all pre-packaked, minifed, and tree-shaken), and servers (common code bundled into a vendor file that node can run). It can also handle less/css (defining sass is easy and left as an excercise for the reader), and webfonts
 
 ### Generators
-r/Build is built off a system of defining shorthand for webpack build configurations. This way you can define configs via simple names if you want to build your own config. The goal being you can define your own configs (as `/<project-root>/blueprints.config.js`) that either: 
+r/Build is built off a system of defining shorthand for webpack build configurations. This way you can define configs via simple names if you want to build your own config. The goal being you can define your own configs (as `/<project-root>/blueprints.config.js`) that either:
 * use the built in generators via their shorthand name e.g. `esnextreact` (to read how its configured, read into [/lib/generators/loaders/index.js](https://github.com/schwers/r-build/blob/master/lib/generators/loaders/index.js) and [/lib/makeBuild.js](https://github.com/schwers/r-build/blob/master/lib/makeBuild.js))
 * pass in a on object that with arguments to give to built in generators:
 
@@ -20,11 +20,13 @@ r/Build is built off a system of defining shorthand for webpack build configurat
   var autoprefixer = require('autoprefixer');
   module.exports = {
     extensions: true
-    postcss: [
-      autoprefixer({
-        browsers: ['last 2 versions'],
-      }),
-    ],
+    webpack: {
+      postcss: [
+        autoprefixer({
+          browsers: ['last 2 versions'],
+        }),
+      ],
+    }
   };
   ```
 
@@ -63,4 +65,3 @@ module.exports = [{
 ## Future goals
 * automatically managing of peer-depedencies for smaller builds. Right now there's tree shaking and you can target UMD, but it'd be nice to see how far we can take the optimizations.
 * Self-hosting: build build with build, check in a compiled copy, which would be the in `/bin` and then write new developments of build in es6/7
-  
