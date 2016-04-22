@@ -1,6 +1,6 @@
 {
   "name": "@r/build",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A webpack based build system that can make UMD modules, (soon)peer-dependent library builds, server 'binarys', or full client ready scripts",
   "bin": {
     "blueprints": "./bin/buildBlueprints.js",
