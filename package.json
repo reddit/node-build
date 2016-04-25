@@ -2,6 +2,9 @@
   "name": "@r/build",
   "version": "0.0.7",
   "description": "A webpack based build system that can make UMD modules, (soon)peer-dependent library builds, server 'binarys', or full client ready scripts",
+  "scripts": {
+    "lint": "eslint lib"
+  },
   "bin": {
     "blueprints": "./bin/buildBlueprints.js",
     "webfonts": "./bin/buildWebfonts.js"
