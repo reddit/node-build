@@ -5,6 +5,7 @@ var path = require('path');
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
+var debug = require('debug')('blueprints');
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')
@@ -46,7 +47,7 @@ function loadBuildsFromPath(configPath) {
 
     return { builds }
   } catch (e) {
-    console.trace(e);
+    debug(e);
     return {};
   }
 }
