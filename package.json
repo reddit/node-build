@@ -47,7 +47,6 @@
     "yargs": "^4.6.0"
   },
   "devDependencies": {
-    "autoprefixer": "^6.3.6",
     "babel-cli": "^6.7.5",
     "react": "^15.0.1",
     "react-dom": "^15.0.1"
