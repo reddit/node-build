@@ -2,10 +2,15 @@
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
+var debug = require('debug')('blueprints');
+var Mocha = require('mocha');
+var colors = require('colors');
+var rimraf = require('rimraf');
+
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
-var debug = require('debug')('blueprints');
+var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')
@@ -29,6 +34,9 @@ var argv = require('yargs')
   .alias('i', 'ignoreBlueprints')
     .describe('ignore the blueprints.config.js file in the current directory and use defaults')
     .default('i', false)
+  .alias('t', 'runTest')
+    .describe('search for test files and run them')
+    .default('t', false)
   .argv;
 
 console.log('...Reading Blueprints', argv.blueprintsPath);
@@ -76,8 +84,12 @@ if (argv.blueprintsPath && !argv.ignoreBlueprints) {
 
 function loadDefaultConfigs() {
   console.log('...using default configs');
-  if (argv.client) {
-    console.log('...client')
+  if (argv.runTest) {
+    console.log('...Setting up tests:');
+    builds = [ configs.DefaultTestingConfig ];
+    builds[0].webpack.entry = getWebpackEntryForTest('./');
+  } else if (argv.client) {
+    console.log('...client');
     builds = [ configs.getClientConfig(argv.production) ];
   } else if (argv.server) {
     console.log('...server');
@@ -99,4 +111,22 @@ if (argv.watch) {
   extensions.watch = true;
 }
 
-build(makeConfig(builds, extensions));
+build(makeConfig(builds, extensions), function(stats) {
+  if (argv.runTest) {
+    console.log(colors.magenta(
+      '\n   ******************************' +
+      '\n   *       RUNNING TESTS        *' +
+      '\n   ******************************'
+    ));
+
+    var m = new Mocha();
+    stats.assets.forEach(function(asset) {
+      var path = './.test/' + asset.name;
+      m.addFile(path);
+    });
+    m.run()
+      .on('end', function() {
+        rimraf('./.test/', function() {});
+      });
+  }
+});
