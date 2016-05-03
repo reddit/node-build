@@ -13,7 +13,7 @@ glob(SRC, function(error, files) {
     dest: path.join(__dirname, '/assets/fonts'),
     fontName: 'rfont',
     css: true,
-    cssDest: path.join(__dirname, '/lib/client/rfont.css'),
+    cssDest: path.join(__dirname, '/src/client/rfont.css'),
     cssFontsPath: '/assets/fonts',
     html: true,
     types: ['svg', 'ttf', 'woff', 'eot'],
