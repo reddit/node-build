@@ -180,11 +180,12 @@ build(makeConfig(builds, extensions), function(stats) {
 
     var mochaInstance = notifyingMochaInstance();
     var addFileToMocha = mochaInstance.addFile.bind(mochaInstance);
-    var promises = [];
-    stats.assets.forEach(function(asset) {
-      promises.push(cachebustTestFile(asset.name).then(addFileToMocha));
-    });
-    Promise.all(promises).then(function() {
+
+    function prepareAssetForMocha(asset) {
+      return cachebustTestFile(asset.name).then(addFileToMocha);
+    }
+
+    Promise.all(stats.assets.map(prepareAssetForMocha)).then(function() {
       mochaInstance.run()
         .on('end', function() {
           removeCompiledTests(extensions.watch);
