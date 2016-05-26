@@ -114,7 +114,6 @@ if (argv.watch) {
   extensions.watch = true;
 }
 
-
 // Given the path of a source file, copies its compiled test file to a new path with a cache buster (timestamp).
 // This is necessary because we want to be able to run tests in watch mode, and Mocha has
 // some caching going on that's dependant on the filename (likely because `require` caches on the filename)
@@ -142,12 +141,27 @@ function copyFile(src, dest) {
   })
 }
 
-// Removes the compiled test files if its safe to do so, then calls a callback. It's not safe
-// to remove the compiled files if we're running in watch mode, as webpack relies on them.
-function removeCompiledTests(watching,  cb) {
-  if (!watching) {
-    rimraf(testDirectory, cb || function() {});
+function globForCachebustedTests(rootDirectory) {
+  var glob = rootDirectory;
+  if (glob[glob.length - 1] !== '/') {
+    glob += '/';
   }
+
+  return glob + '**/*.compiledtest-*';
+}
+
+// Removes all compiled test files if its safe to do so, then calls a callback. It's not safe
+// to remove the original compiled files if we're running in watch mode, as webpack relies on them.
+// We can however remove the cache-busted versions of the files to free up space.
+function removeCompiledTests(watching,  cb) {
+  var callback = cb || function() {};
+
+  if (watching) {
+    rimraf(globForCachebustedTests(testDirectory), callback);
+    return;
+  }
+
+  rimraf(testDirectory, callback);
 }
 
 // Mocha outputs to console by default. mochaNotifier will add node-notifier notifications,
