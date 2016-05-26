@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 var _ = require('lodash');
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
 var debug = require('debug')('blueprints');
 var Mocha = require('mocha');
+var mochaNotifier = require('mocha-notifier-reporter');
 var colors = require('colors');
 var rimraf = require('rimraf');
+var process = require('process');
 
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
 var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
+var testDirectory = configs.DefaultTestingConfig.webpack.output.path;
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')
@@ -111,6 +114,62 @@ if (argv.watch) {
   extensions.watch = true;
 }
 
+// Given the path of a source file, copies its compiled test file to a new path with a cache buster (timestamp).
+// This is necessary because we want to be able to run tests in watch mode, and Mocha has
+// some caching going on that's dependant on the filename (likely because `require` caches on the filename)
+function cachebustTestFile(filePath) {
+  return cachebustFile(testFilePath(filePath));
+}
+
+function cachebustFile(srcPath) {
+  return copyFile(srcPath, cacheBustedPath(srcPath));
+}
+
+function testFilePath(filePath) {
+  return path.join(testDirectory, filePath);
+}
+
+function cacheBustedPath(srcPath) {
+  return srcPath + '-' + (new Date()).getTime();
+}
+
+function copyFile(src, dest) {
+  return new Promise(function(resolve, reject) {
+    fs.copy(path.resolve(src), path.resolve(dest), function() {
+      resolve(dest);
+    });
+  })
+}
+
+function globForCachebustedTests(rootDirectory) {
+  var glob = rootDirectory;
+  if (glob[glob.length - 1] !== '/') {
+    glob += '/';
+  }
+
+  return glob + '**/*.compiledtest-*';
+}
+
+// Removes all compiled test files if its safe to do so, then calls a callback. It's not safe
+// to remove the original compiled files if we're running in watch mode, as webpack relies on them.
+// We can however remove the cache-busted versions of the files to free up space.
+function removeCompiledTests(watching,  cb) {
+  var callback = cb || function() {};
+
+  if (watching) {
+    rimraf(globForCachebustedTests(testDirectory), callback);
+    return;
+  }
+
+  rimraf(testDirectory, callback);
+}
+
+// Mocha outputs to console by default. mochaNotifier will add node-notifier notifications,
+// but we need to tell it to also pass through to spec so that results are still console.log'd
+function notifyingMochaInstance() {
+  return new Mocha({ reporter: mochaNotifier.decorate('spec') })
+}
+
 build(makeConfig(builds, extensions), function(stats) {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
     console.log(colors.red(
@@ -127,14 +186,27 @@ build(makeConfig(builds, extensions), function(stats) {
       '\n   ******************************'
     ));
 
-    var m = new Mocha();
-    stats.assets.forEach(function(asset) {
-      var path = './.test/' + asset.name;
-      m.addFile(path);
+    var mochaInstance = notifyingMochaInstance();
+    var addFileToMocha = mochaInstance.addFile.bind(mochaInstance);
+
+    function prepareAssetForMocha(asset) {
+      return cachebustTestFile(asset.name).then(addFileToMocha);
+    }
+
+    Promise.all(stats.assets.map(prepareAssetForMocha)).then(function() {
+      mochaInstance.run()
+        .on('end', function() {
+          removeCompiledTests(extensions.watch);
+        });
     });
-    m.run()
-      .on('end', function() {
-        rimraf('./.test/', function() {});
-      });
   }
+});
+
+process.on('SIGINT', function() {
+  if (argv.runTest && extensions.watch) {
+    removeCompiledTests(false, process.exit); // remove everything now that we're done
+    return;
+  }
+
+  process.exit();
 });
