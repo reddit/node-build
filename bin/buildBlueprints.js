@@ -112,6 +112,14 @@ if (argv.watch) {
 }
 
 build(makeConfig(builds, extensions), function(stats) {
+  if (stats.errors && stats.errors.length > 0 && !argv.watch) {
+    console.log(colors.red(
+      'ERROR IN BUILD. Aborting.'
+    ));
+
+    process.exit(1);
+  }
+
   if (argv.runTest) {
     console.log(colors.magenta(
       '\n   ******************************' +
