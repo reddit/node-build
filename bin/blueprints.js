@@ -69,17 +69,6 @@
 
 /***/ },
 
-/***/ 10:
-/***/ function(module, exports) {
-
-	module.exports = function (options) {
-	  return {
-	    extensions: options.extensions
-	  };
-	};
-
-/***/ },
-
 /***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
@@ -632,6 +621,70 @@
 
 /***/ },
 
+/***/ 273:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_path__ = __webpack_require__(5);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_path___default = __WEBPACK_IMPORTED_MODULE_0_path__ && __WEBPACK_IMPORTED_MODULE_0_path__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_path__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_path__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_path___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_path___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lib_generators_Generator__ = __webpack_require__(1);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Simple__ = __webpack_require__(274);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+
+
+
+	var simple = /* harmony import */__WEBPACK_IMPORTED_MODULE_2__Simple__["a"].objectOrFunction; // its a function;
+
+	var resolvePath = function resolvePath(strPath) {
+	  return /* harmony import */__WEBPACK_IMPORTED_MODULE_0_path___default.a.resolve(strPath);
+	};
+
+	/* harmony default export */ exports["a"] = /* harmony import */__WEBPACK_IMPORTED_MODULE_1_lib_generators_Generator__["a"].bind()('modules', function (options) {
+	  return _extends({}, simple(options), {
+	    modules: (options.paths || []).map(resolvePath)
+	  });
+	});
+
+/***/ },
+
+/***/ 274:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lib_generators_Generator__ = __webpack_require__(1);
+
+
+	/* harmony default export */ exports["a"] = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_Generator__["a"].bind()('simple', function (options) {
+	  return {
+	    extensions: options.extensions
+	  };
+	});
+
+/***/ },
+
+/***/ 275:
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lib_generators_Generator__ = __webpack_require__(1);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Modules__ = __webpack_require__(273);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+
+
+	var modules = /* harmony import */__WEBPACK_IMPORTED_MODULE_1__Modules__["a"].objectOrFunction; // its a function;
+
+	/* harmony default export */ exports["a"] = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_Generator__["a"].bind()('npm-and-modules', function (options) {
+	  var result = modules(options);
+	  return _extends({}, result, {
+	    modules: result.modules.concat('node_modules')
+	  });
+	});
+
+/***/ },
+
 /***/ 28:
 /***/ function(module, exports, __webpack_require__) {
 
@@ -715,8 +768,7 @@
 	  }
 
 	  return thing;
-	};
-	/* harmony export */ Object.defineProperty(exports, "b", {configurable: false, enumerable: true, get: function() { return tryToLoadGenerator; }});
+	};/* unused harmony export tryToLoadGenerator */
 
 	var parseNameOrObject = function parseNameOrObject(nameOrObject) {
 	  if (typeof nameOrObject === 'string') {
@@ -911,45 +963,22 @@
 
 /***/ },
 
-/***/ 47:
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(0);
-	var ModulesResolver = __webpack_require__(9);
-
-	module.exports = function (options) {
-	  var result = ModulesResolver(options);
-	  result.modules = result.modules.concat('node_modules');
-	  return result;
-	};
-
-/***/ },
-
 /***/ 48:
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__ = __webpack_require__(3);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Modules__ = __webpack_require__(273);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__NPMAndModules__ = __webpack_require__(275);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Simple__ = __webpack_require__(274);
 
 
-	var SimpleResolver = __webpack_require__(10);
-	var ModulesResolver = __webpack_require__(9);
-	var NPMAndModulesResolver = __webpack_require__(47);
 
-	var resolvers = {
-	  'simple': SimpleResolver,
-	  'modules': ModulesResolver,
-	  'npm-and-modules': NPMAndModulesResolver
-	};
 
-	function getResolver(resolverName) {
-	  return /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["b"].bind()(resolverName, resolvers, 'resolver');
-	}
 
-	module.exports = {
-	  resolvers: resolvers,
-	  getResolver: getResolver
-	};
+
+	var getResolver = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('resolver', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__Modules__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_2__NPMAndModules__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_3__Simple__["a"]]);
+	/* harmony export */ Object.defineProperty(exports, "getResolver", {configurable: false, enumerable: true, get: function() { return getResolver; }});
 
 /***/ },
 
@@ -1337,25 +1366,6 @@
 	    filename: options.name || '[name].js'
 	  };
 	});
-
-/***/ },
-
-/***/ 9:
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(0);
-	var path = __webpack_require__(5);
-	var SimpleResolver = __webpack_require__(10);
-
-	function resolvePath(strPath) {
-	  return path.resolve(strPath); // path.resolve seems to have a binding issue;
-	}
-
-	module.exports = function (options) {
-	  return _.extend(SimpleResolver(options), {
-	    modules: (options.paths || []).map(resolvePath)
-	  });
-	};
 
 /***/ }
 
