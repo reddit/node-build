@@ -5,7 +5,6 @@ function makeConfig(name) {
   return {
     name: name,
     webpack: {
-      devtool: 'source-map',
       entry,
       output: {
         generator: 'simple',
@@ -30,6 +29,16 @@ function makeConfig(name) {
       ],
       externals: 'node-modules',
       target: 'node',
+      node: {
+        path: false,
+        process: false,
+        __filename: false,
+        __dirname: false,
+        os: false,
+        global: false,
+        Buffer: false,
+        require: false,
+      },
     },
   };
 }
