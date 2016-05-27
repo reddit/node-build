@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
@@ -11,6 +10,9 @@ var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
 var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
+
+var yargs = require('yargs');
+console.log("yargs?", yargs);
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')
@@ -46,6 +48,7 @@ function loadBuildsFromPath(configPath) {
   try {
     console.log('...loading bluerprints from', configPath)
     var builds = require(path.resolve(configPath));
+    console.log('builds?', builds)
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
         return { extensions: _.omit(builds, 'extensions') };

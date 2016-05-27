@@ -1,0 +1,48 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/5.5.0/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'watch' ]
+2 info using npm@3.9.0
+3 info using node@v5.5.0
+4 verbose run-script [ 'prewatch', 'watch', 'postwatch' ]
+5 info lifecycle @r/build@0.6.2~prewatch: @r/build@0.6.2
+6 silly lifecycle @r/build@0.6.2~prewatch: no script for prewatch, continuing
+7 info lifecycle @r/build@0.6.2~watch: @r/build@0.6.2
+8 verbose lifecycle @r/build@0.6.2~watch: unsafe-perm in lifecycle true
+9 verbose lifecycle @r/build@0.6.2~watch: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/schwers/src/reddit/r/build/node_modules/.bin:/usr/local/Cellar/node/5.5.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+10 verbose lifecycle @r/build@0.6.2~watch: CWD: /Users/schwers/src/reddit/r/build
+11 silly lifecycle @r/build@0.6.2~watch: Args: [ '-c', 'blueprints -w' ]
+12 silly lifecycle @r/build@0.6.2~watch: Returned: code: 1  signal: null
+13 info lifecycle @r/build@0.6.2~watch: Failed to exec watch script
+14 verbose stack Error: @r/build@0.6.2 watch: `blueprints -w`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:245:16)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at EventEmitter.emit (events.js:185:7)
+14 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at ChildProcess.emit (events.js:185:7)
+14 verbose stack     at maybeClose (internal/child_process.js:821:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+15 verbose pkgid @r/build@0.6.2
+16 verbose cwd /Users/schwers/src/reddit/r/build
+17 error Darwin 14.5.0
+18 error argv "/usr/local/Cellar/node/5.5.0/bin/node" "/usr/local/bin/npm" "run" "watch"
+19 error node v5.5.0
+20 error npm  v3.9.0
+21 error code ELIFECYCLE
+22 error @r/build@0.6.2 watch: `blueprints -w`
+22 error Exit status 1
+23 error Failed at the @r/build@0.6.2 watch script 'blueprints -w'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the @r/build package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     blueprints -w
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs @r/build
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls @r/build
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]
