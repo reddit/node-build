@@ -8,7 +8,8 @@
     "watch": "blueprints -w"
   },
   "bin": {
-    "blueprints": "./bin/name.js"
+    "blueprints": "./bin/blueprints.js",
+    "webfonts": "./bin/webfonts.js"
   },
   "repository": {
     "type": "git",

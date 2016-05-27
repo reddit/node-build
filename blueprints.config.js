@@ -1,17 +1,16 @@
 function makeConfig(name) {
-  var entryPath = './src/' + name + '.js';
-  var outputName = name + '.js';
+  var entry = {};
+  entry[name] = './src/' + name + '.js';
 
   return {
     name: name,
     webpack: {
-      entry: { name: entryPath },
+      entry,
       output: {
         generator: 'simple',
-        dest: './bin',
-        name: outputName,
+        dest: './bin'
       },
-      resovlve: {
+      resolve: {
         generator: 'npm-and-modules',
         paths: [ '' ],
         extensions: ['', '.js', '.json'],
@@ -29,19 +28,8 @@ function makeConfig(name) {
       ],
       externals: 'node-modules',
       target: 'node',
-      node: {
-        process: false,
-        global: false,
-        __filename: false,
-        __dirname: false,
-        os: false,
-        fs: false,
-        console: false,
-      }
     },
   };
 }
 
-console.log(makeConfig('blueprints'));
-
-module.exports = [ makeConfig('blueprints') ];
+module.exports = [ makeConfig('blueprints'), makeConfig('webfonts') ];
