@@ -12,7 +12,6 @@ var configs = require('../lib/configs');
 var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
 
 var yargs = require('yargs');
-console.log("yargs?", yargs);
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')

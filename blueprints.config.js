@@ -5,10 +5,11 @@ function makeConfig(name) {
   return {
     name: name,
     webpack: {
+      devtool: 'source-map',
       entry,
       output: {
         generator: 'simple',
-        dest: './bin'
+        dest: './bin',
       },
       resolve: {
         generator: 'npm-and-modules',
@@ -24,6 +25,7 @@ function makeConfig(name) {
         'set-node-env',
         'abort-if-errors',
         'node-executable',
+        // 'node-load-sourcemaps',
         // 'minify-and-treeshake',
       ],
       externals: 'node-modules',
