@@ -15,7 +15,7 @@ glob(SRC, (error, files) => {
   }
 
   webfontsGenerator({
-    files: files,
+    files,
     dest: path.resolve('./assets/fonts'),
     fontName: 'rfont',
     css: true,
@@ -24,5 +24,5 @@ glob(SRC, (error, files) => {
     html: true,
     types: ['svg', 'ttf', 'woff', 'eot'],
     normalize: true,
-  })
+  });
 });

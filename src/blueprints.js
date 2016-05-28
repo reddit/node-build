@@ -1,7 +1,6 @@
-import colors from 'colors';
-import debugModule from 'debug'
-import fs from 'fs';
 import { omit } from 'lodash/object';
+import colors from 'colors';
+import debugModule from 'debug';
 import Mocha from 'mocha';
 import path from 'path';
 import rimraf from 'rimraf';
@@ -9,10 +8,13 @@ import yargs from 'yargs';
 
 import { build } from 'lib/build';
 import { makeBuild } from 'lib/makeBuild';
-import configs from 'lib/configs';
+import { getClientConfig, getServerConfig } from 'lib/configs';
+import TestingConfig from 'lib/configs/Testing';
 import { getWebpackEntryForTest } from 'lib/getWebpackEntryForTest';
 
 const debug = debugModule('blueprints');
+
+const { blue, white, magenta, red } = colors;
 
 /* eslint-disable max-len */
 const argv = yargs
@@ -43,12 +45,12 @@ const argv = yargs
   .argv;
 /* eslint-enable */
 
-console.log(colors.blue(`[Blueprints] reading from ${argv.blueprintsPath}`));
-console.log(colors.blue(`[cwd] ${process.cwd()}`));
+console.log(blue(`[Blueprints] reading from ${argv.blueprintsPath}`));
+console.log(blue(`[cwd] ${process.cwd()}`));
 
 const loadBuildsFromPath = configPath => {
   try {
-    conslole.log(colors.blue(`..loading config ${configPath}`));
+    console.log(blue(`..loading config ${configPath}`));
     let builds = require(path.resolve(configPath));
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
@@ -57,7 +59,7 @@ const loadBuildsFromPath = configPath => {
       builds = [builds];
     }
 
-    return { builds }
+    return { builds };
   } catch (e) {
     debug(e);
     return {};
@@ -68,7 +70,7 @@ const applyExtensions = (builds, extensions) => {
   const ext = extensions || {};
   if (Object.keys(ext).length > 0) {
     /* eslint-disable max-len */
-    console.log(`${colors.blue('[extensions]')}: ${colors.white(JSON.stringify(extensions, null, 2))}`);
+    console.log(`${blue('[extensions]')}: ${white(JSON.stringify(extensions, null, 2))}`);
     /* eslint-enable */
   }
 
@@ -76,8 +78,8 @@ const applyExtensions = (builds, extensions) => {
 };
 
 const makeConfig = (builds, extensions) => ({
-  builds: applyExtensions(builds, extensions).map(makeBuild)
-})
+  builds: applyExtensions(builds, extensions).map(makeBuild),
+});
 
 let builds = [];
 let extensions = {};
@@ -92,25 +94,25 @@ if (argv.blueprintsPath && !argv.ignoreBlueprints) {
 }
 
 const loadDefaultConfigs = () => {
-  console.log(colors.blue('..using default configs'));
+  console.log(blue('..using default configs'));
   if (argv.runTest) {
-    console.log(colors.magenta('..Setting up tests:'));
-    builds = [ configs.DefaultTestingConfig ];
+    console.log(magenta('..Setting up tests:'));
+    builds = [ TestingConfig ];
     builds[0].webpack.entry = getWebpackEntryForTest('./');
   } else if (argv.client) {
-    console.log(colors.blue('..client'));
-    builds = [ configs.getClientConfig(argv.production) ];
+    console.log(blue('..client'));
+    builds = [ getClientConfig(argv.production) ];
   } else if (argv.server) {
-    console.log(colors.blue('..server'));
-    builds = [ configs.getServerConfig(argv.production) ];
+    console.log(blue('..server'));
+    builds = [ getServerConfig(argv.production) ];
   } else if (argv.clientAndServer) {
-    console.log(colors.blue('..both'));
+    console.log(blue('..both'));
     builds = [
-      configs.getClientConfig(argv.production),
-      configs.getServerConfig(argv.production),
+      getClientConfig(argv.production),
+      getServerConfig(argv.production),
     ];
   }
-}
+};
 
 if (!builds.length) {
   loadDefaultConfigs();
@@ -122,7 +124,7 @@ if (argv.watch) {
 
 build(makeConfig(builds, extensions), stats => {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
-    console.log(colors.red(
+    console.log(red(
       'ERROR IN BUILD. Aborting.'
     ));
 
@@ -130,18 +132,18 @@ build(makeConfig(builds, extensions), stats => {
   }
 
   if (argv.runTest) {
-    console.log(colors.magenta(
+    console.log(magenta(
       '\n   ******************************' +
       '\n   *       RUNNING TESTS        *' +
       '\n   ******************************'
     ));
 
-    var m = new Mocha();
-    stats.assets.forEach(function(asset) {
-      var path = './.test/' + asset.name;
-      m.addFile(path);
+    const mochaInstance = new Mocha();
+    stats.assets.forEach(asset => {
+      mochaInstance.addFile(`./.test/${asset.name}`);
     });
-    m.run()
+
+    mochaInstance.run()
       .on('end', function() {
         rimraf('./.test/', function() {});
       });

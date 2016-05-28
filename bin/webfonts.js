@@ -38,42 +38,48 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ function(module, exports) {
 
-	module.exports = require("glob");
+	module.exports = require("colors");
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	module.exports = require("glob");
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = require("webfonts-generator");
+	module.exports = require("path");
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	module.exports = require("webfonts-generator");
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_colors__ = __webpack_require__(4);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_colors__ = __webpack_require__(0);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_colors___default = __WEBPACK_IMPORTED_MODULE_0_colors__ && __WEBPACK_IMPORTED_MODULE_0_colors__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_colors__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_colors__; }
 	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_colors___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_colors___default });
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_glob__ = __webpack_require__(0);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_glob__ = __webpack_require__(1);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_glob___default = __WEBPACK_IMPORTED_MODULE_1_glob__ && __WEBPACK_IMPORTED_MODULE_1_glob__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_1_glob__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_1_glob__; }
 	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_1_glob___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_1_glob___default });
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path__ = __webpack_require__(1);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path__ = __webpack_require__(2);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path___default = __WEBPACK_IMPORTED_MODULE_2_path__ && __WEBPACK_IMPORTED_MODULE_2_path__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_2_path__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_2_path__; }
 	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_2_path___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_2_path___default });
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__ = __webpack_require__(2);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__ = __webpack_require__(3);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_webfonts_generator___default = __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__ && __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_3_webfonts_generator__; }
 	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_3_webfonts_generator___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_3_webfonts_generator___default });
 
@@ -104,12 +110,6 @@
 	    normalize: true
 	  });
 	});
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	module.exports = require("colors");
 
 /***/ }
 /******/ ]);

@@ -13,6 +13,13 @@
 
   "extends": "eslint:recommended",
 
+  "globals": {
+    // having some trouble getting eslint to recognize es6 features
+    "Promise": false,
+    "Set": false,
+    "Map": flase,
+  },
+
   // plugins let use use custom rules below
   "plugins": [
     "babel",
@@ -52,6 +59,7 @@
     "comma-dangle": [2, "always-multiline"],
     "consistent-return": 0,
     "indent": [2, 2, {"SwitchCase": 1}],
+    "keyword-spacing": [2],
     "max-len": [1, 100, 2, {"ignoreComments": true}],
     "no-cond-assign": [2, "always"],
     "no-console": 0,
@@ -78,12 +86,10 @@
     "no-underscore-dangle": 0,
     "quotes": [2, "single"],
     "semi": [2, "always"],
-    "space-after-keywords": [2, "always"],
     "space-before-blocks": [2, "always"],
     "space-before-function-parentheses": [0, "never"],
     "space-in-brackets": [0, "never"],
     "space-in-parens": [2, "never"],
-    "space-return-throw-case": 1,
     "space-unary-ops": [1, { "words": true, "nonwords": false }],
     "strict": [2, "never"],
     "use-isnan": 2,
@@ -103,7 +109,7 @@
     "no-iterator": 2,
     "no-labels": 2,
     "no-lone-blocks": 2,
-    "no-loop-func": 2,
+    "no-loop-func": 0,
     "no-multi-spaces": 2,
     "no-multi-str": 2,
     "no-native-reassign": 2,
