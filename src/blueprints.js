@@ -1,19 +1,21 @@
-var _ = require('lodash');
-var fs = require('fs');
-var path = require('path');
-var debug = require('debug')('blueprints');
-var Mocha = require('mocha');
-var colors = require('colors');
-var rimraf = require('rimraf');
+import colors from 'colors';
+import debugModule from 'debug'
+import fs from 'fs';
+import { omit } from 'lodash/object';
+import Mocha from 'mocha';
+import path from 'path';
+import rimraf from 'rimraf';
+import yargs from 'yargs';
 
-var build = require('../lib/build');
-var makeBuild = require('../lib/makeBuild').makeBuild;
-var configs = require('../lib/configs');
-var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
+import { build } from 'lib/build';
+import { makeBuild } from 'lib/makeBuild';
+import configs from 'lib/configs';
+import { getWebpackEntryForTest } from 'lib/getWebpackEntryForTest';
 
-var yargs = require('yargs');
+const debug = debugModule('blueprints');
 
-var argv = require('yargs')
+/* eslint-disable max-len */
+const argv = yargs
   .alias('b', 'blueprintsPath')
     .describe('b', 'path to a raw-config via a node file with moduel.exports = config')
     .default('b', './blueprints.config.js')
@@ -39,18 +41,18 @@ var argv = require('yargs')
     .describe('search for test files and run them')
     .default('t', false)
   .argv;
+/* eslint-enable */
 
-console.log('...Reading Blueprints', argv.blueprintsPath);
-console.log('...cwd', process.cwd());
+console.log(colors.blue(`[Blueprints] reading from ${argv.blueprintsPath}`));
+console.log(colors.blue(`[cwd] ${process.cwd()}`));
 
-function loadBuildsFromPath(configPath) {
+const loadBuildsFromPath = configPath => {
   try {
-    console.log('...loading bluerprints from', configPath)
-    var builds = require(path.resolve(configPath));
-    console.log('builds?', builds)
+    conslole.log(colors.blue(`..loading config ${configPath}`));
+    let builds = require(path.resolve(configPath));
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
-        return { extensions: _.omit(builds, 'extensions') };
+        return { extensions: omit(builds, 'extensions') };
       }
       builds = [builds];
     }
@@ -60,23 +62,28 @@ function loadBuildsFromPath(configPath) {
     debug(e);
     return {};
   }
-}
+};
 
-function applyExtensions(builds, extensions) {
-  var ext = extensions || {};
-  console.log('...applying extensions', extensions);
-  return builds.map(function(build) { return _.merge(build, ext ); });
-}
+const applyExtensions = (builds, extensions) => {
+  const ext = extensions || {};
+  if (Object.keys(ext).length > 0) {
+    /* eslint-disable max-len */
+    console.log(`${colors.blue('[extensions]')}: ${colors.white(JSON.stringify(extensions, null, 2))}`);
+    /* eslint-enable */
+  }
 
-function makeConfig(builds, extensions) {
-  return { builds: applyExtensions(builds, extensions).map(makeBuild) };
-}
+  return builds.map(build => ({ ...build, ...ext }));
+};
 
-var builds = [];
-var extensions = {};
+const makeConfig = (builds, extensions) => ({
+  builds: applyExtensions(builds, extensions).map(makeBuild)
+})
+
+let builds = [];
+let extensions = {};
 
 if (argv.blueprintsPath && !argv.ignoreBlueprints) {
-  var blueprints = loadBuildsFromPath(argv.blueprintsPath);
+  const blueprints = loadBuildsFromPath(argv.blueprintsPath);
   if (blueprints.extensions) {
     extensions = blueprints.extensions;
   } else if (blueprints.builds && blueprints.builds.length) {
@@ -84,20 +91,20 @@ if (argv.blueprintsPath && !argv.ignoreBlueprints) {
   }
 }
 
-function loadDefaultConfigs() {
-  console.log('...using default configs');
+const loadDefaultConfigs = () => {
+  console.log(colors.blue('..using default configs'));
   if (argv.runTest) {
-    console.log('...Setting up tests:');
+    console.log(colors.magenta('..Setting up tests:'));
     builds = [ configs.DefaultTestingConfig ];
     builds[0].webpack.entry = getWebpackEntryForTest('./');
   } else if (argv.client) {
-    console.log('...client');
+    console.log(colors.blue('..client'));
     builds = [ configs.getClientConfig(argv.production) ];
   } else if (argv.server) {
-    console.log('...server');
+    console.log(colors.blue('..server'));
     builds = [ configs.getServerConfig(argv.production) ];
   } else if (argv.clientAndServer) {
-    console.log('...both');
+    console.log(colors.blue('..both'));
     builds = [
       configs.getClientConfig(argv.production),
       configs.getServerConfig(argv.production),
@@ -113,7 +120,7 @@ if (argv.watch) {
   extensions.watch = true;
 }
 
-build(makeConfig(builds, extensions), function(stats) {
+build(makeConfig(builds, extensions), stats => {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
     console.log(colors.red(
       'ERROR IN BUILD. Aborting.'

@@ -72,44 +72,54 @@
 /***/ 11:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* eslint-disable */
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack__ = __webpack_require__(2);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_webpack___default = __WEBPACK_IMPORTED_MODULE_0_webpack__ && __WEBPACK_IMPORTED_MODULE_0_webpack__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_webpack__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_webpack__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_webpack___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_webpack___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_node_notifier__ = __webpack_require__(52);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_node_notifier___default = __WEBPACK_IMPORTED_MODULE_1_node_notifier__ && __WEBPACK_IMPORTED_MODULE_1_node_notifier__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_1_node_notifier__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_1_node_notifier__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_1_node_notifier___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_1_node_notifier___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fs__ = __webpack_require__(4);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fs___default = __WEBPACK_IMPORTED_MODULE_2_fs__ && __WEBPACK_IMPORTED_MODULE_2_fs__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_2_fs__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_2_fs__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_2_fs___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_2_fs___default });
 
-	var webpack = __webpack_require__(2);
-	var notifier = __webpack_require__(52);
-	var _ = __webpack_require__(0);
-	var fs = __webpack_require__(4);
+
+
 
 	var nodeEnv = "production" || 'development';
 
-	module.exports = function (config, cb) {
-	  if (!cb) {
-	    cb = function cb() {};
-	  }
-	  config.builds.forEach(function (build) {
-	    exectuteBuild(build, cb);
-	  });
+	var build = function build(config, cb) {
+	  var callback = cb || function () {};
+	  var run = function run(build) {
+	    return exectuteBuild(build, callback);
+	  };
+	  config.builds.forEach(run);
 	};
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return build; }});
 
-	function exectuteBuild(build, cb) {
-	  var compiler = webpack(build.webpackConfig);
+	var exectuteBuild = function exectuteBuild(build, cb) {
+	  var compiler = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_webpack___default.a.bind()(build.webpackConfig);
 	  if (build.watch) {
 	    compiler.watch({}, function (err, stats) {
 	      outputBuild(build.buildName)(err, stats);
 	      cb(stats.toJson());
 	    });
-	  } else {
-	    compiler.run(function (err, stats) {
-	      console.log(stats.toString({
-	        colors: !build.disableColors,
-	        chunks: false,
-	        version: false
-	      }));
-	      cb(stats.toJson());
-	    });
-	  }
-	}
 
-	function formatAsset(asset) {
+	    return;
+	  }
+
+	  compiler.run(function (err, stats) {
+	    console.log(stats.toString({
+	      colors: !build.disableColors,
+	      chunks: false,
+	      version: false
+	    }));
+
+	    cb(stats.toJson());
+	  });
+	};
+
+	var formatAsset = function formatAsset(asset) {
 	  var name = asset.name;
 	  var size = asset.size;
 	  var sizeStr = size + " B";
@@ -117,34 +127,40 @@
 	  if (size > 1000) sizeStr = Math.ceil(size / 1000) + " kB";
 	  if (size > 1000000) sizeStr = Math.ceil(size / 1000000) + " MB";
 
-	  return name + " [" + sizeStr + "]";
-	}
+	  return name + ' [' + sizeStr + ']';
+	};
 
-	function outputBuild(type) {
+	var outputBuild = function outputBuild(type) {
 	  return function (err, stats) {
-	    if (!err) {
-	      console.log(stats.toString({
-	        colors: true,
-	        chunks: false,
-	        version: false
-	      }));
-
-	      var s = stats.toJson();
-
-	      if (s.errors && s.errors.length) {
-	        notifier.notify({
-	          "title": type + " – ERROR!",
-	          "message": "Check the console for errors"
-	        });
-	      } else {
-	        notifier.notify({
-	          "title": type + " – Build complete",
-	          "message": s.assets.map(formatAsset).join("\n")
-	        });
-	      }
+	    if (err) {
+	      console.log('error in build', err);
+	      return;
 	    }
+
+	    console.log(stats.toString({
+	      colors: true,
+	      chunks: false,
+	      version: false
+	    }));
+
+	    var buildStats = stats.toJson();
+	    var errors = buildStats.errors;
+
+
+	    if (errors && errors.length) {
+	      /* harmony import */__WEBPACK_IMPORTED_MODULE_1_node_notifier___default.a.notify({
+	        title: type + ' - ERROR!',
+	        message: 'Check the console for errors'
+	      });
+	      return;
+	    }
+
+	    /* harmony import */__WEBPACK_IMPORTED_MODULE_1_node_notifier___default.a.notify({
+	      title: type + ' - Build complete',
+	      message: buildStats.assets.map(formatAsset).join('\n')
+	    });
 	  };
-	}
+	};
 
 /***/ },
 
@@ -184,19 +200,22 @@
 /***/ 13:
 /***/ function(module, exports, __webpack_require__) {
 
-	var getTestFiles = __webpack_require__(49);
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__getTestFiles__ = __webpack_require__(49);
 
-	module.exports = function getWebpackEntryForTest(dir) {
+
+	var getWebpackEntryForTest = function getWebpackEntryForTest(dir) {
 	  console.log('   Searching for tests in', process.cwd());
-	  var files = getTestFiles(dir, '.test.');
+	  var files = /* harmony import */__WEBPACK_IMPORTED_MODULE_0__getTestFiles__["a"].bind()(dir, '.test.');
 	  console.log('   Found ' + files.length + ' test' + (files.length > 1 ? 's' : ''));
 
-	  return files.reduce(function (prev, cur) {
+	  return files.reduce(function (prev, current) {
 	    var moduleName = cur.path.split('.test')[0].split('./')[1] + '.compiledtest';
 	    prev[moduleName] = cur.path;
 	    return prev;
 	  }, {});
 	};
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getWebpackEntryForTest; }});
 
 /***/ },
 
@@ -204,91 +223,61 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lib_generators_externals__ = __webpack_require__(26);
-	var _ = __webpack_require__(0);
-	var generators = __webpack_require__(28);
-	var getLoader = generators.getLoader;
-	var getPlugin = generators.getPlugin;
-	var getOutput = generators.getOutput;
-	var getResolver = generators.getResolver;
-	var getEntry = generators.getEntry;
-	var getPostCSS = generators.getPostCSS;
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_object__ = __webpack_require__(276);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_object___default = __WEBPACK_IMPORTED_MODULE_0_lodash_object__ && __WEBPACK_IMPORTED_MODULE_0_lodash_object__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_lodash_object__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_lodash_object__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_lodash_object___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_lodash_object___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lib_generators_loaders__ = __webpack_require__(34);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lib_generators_plugins__ = __webpack_require__(44);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lib_generators_output__ = __webpack_require__(36);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lib_generators_resolver__ = __webpack_require__(48);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__ = __webpack_require__(25);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry___default = __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__ && __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_5_lib_generators_entry___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_5_lib_generators_entry___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lib_generators_postcss__ = __webpack_require__(46);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lib_generators_externals__ = __webpack_require__(26);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 
-	function makeBuild(shortBuild) {
+
+
+
+
+
+
+
+
+
+	var makeBuild = function makeBuild(shortBuild) {
 	  return buildObject(shortBuild.name, shortBuild.watch, parseWebpackConfig(shortBuild.webpack, shortBuild.name));
-	}
+	};
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return makeBuild; }});
 
-	function buildObject(buildName, watch, webpackConfig) {
+	var buildObject = function buildObject(buildName, watch, webpackConfig) {
 	  return {
 	    watch: watch,
 	    buildName: buildName,
 	    webpackConfig: webpackConfig
 	  };
-	}
+	};
 
-	function parseWebpackConfig(shortHandConfig, buildName) {
-	  var webpackConfig = {};
+	var mapNullable = function mapNullable(arrayOrNull, fn) {
+	  return (arrayOrNull || []).map(fn);
+	};
 
-	  Object.keys(shortHandConfig).forEach(function (key) {
-	    var obj = shortHandConfig[key];
+	var parseWebpackConfig = function parseWebpackConfig(shortHandConfig, buildName) {
+	  var webpackConfig = {
+	    entry: /* harmony import */__WEBPACK_IMPORTED_MODULE_5_lib_generators_entry__["getEntry"].bind()(shortHandConfig.entry, buildName),
+	    output: /* harmony import */__WEBPACK_IMPORTED_MODULE_3_lib_generators_output__["a"].bind()(shortHandConfig.output),
+	    module: {
+	      loaders: mapNullable(shortHandConfig.loaders, /* harmony import */__WEBPACK_IMPORTED_MODULE_1_lib_generators_loaders__["a"])
+	    },
+	    plugins: mapNullable(shortHandConfig.plugins, /* harmony import */__WEBPACK_IMPORTED_MODULE_2_lib_generators_plugins__["a"]),
+	    resolve: /* harmony import */__WEBPACK_IMPORTED_MODULE_4_lib_generators_resolver__["a"].bind()(shortHandConfig.resolve),
+	    postcss: mapNullable(shortHandConfig.postcss, /* harmony import */__WEBPACK_IMPORTED_MODULE_6_lib_generators_postcss__["a"]),
+	    externals: /* harmony import */__WEBPACK_IMPORTED_MODULE_7_lib_generators_externals__["a"].bind()(shortHandConfig.externals)
+	  };
 
-	    if (key === 'loaders') {
-	      _.defaults(webpackConfig, { module: { loaders: [] } });
-	      concatInPlace(webpackConfig.module.loaders, obj.map(getLoader));
-	    }
-
-	    if (key === 'plugins') {
-	      webpackConfig.plugins = obj.map(getPlugin);
-	    }
-
-	    if (key === 'output') {
-	      webpackConfig.output = getOutput(obj);
-	    }
-
-	    if (key === 'resolve') {
-	      webpackConfig.resolve = getResolver(obj);
-	    }
-
-	    if (key === 'entry') {
-	      webpackConfig.entry = getEntry(obj, buildName);
-	    }
-
-	    if (key === 'postcss') {
-	      webpackConfig.postcss = obj.map(getPostCSS);
-	    }
-
-	    if (key === 'externals') {
-	      webpackConfig.externals = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_externals__["a"].bind()(obj);
-	    }
-	  });
-
-	  return _.extend(webpackConfig, _.omit(shortHandConfig, Object.keys(webpackConfig).concat('loaders')));
-	}
-
-	function concatInPlace(dest, source) {
-	  source.forEach(function (thing) {
-	    dest.push(thing);
-	  });
-	}
-
-	function loadNameOrUseSource(thing, load) {
-	  if (typeof thing === 'string') {
-	    return load(thing);
-	  }
-
-	  return thing;
-	}
-
-	function mapLoadNameOrUseSource(array, loader) {
-	  return array.map(loader);
-	}
-
-	module.exports = {
-	  makeBuild: makeBuild,
-	  buildObject: buildObject,
-	  parseWebpackConfig: parseWebpackConfig,
-	  loadNameOrUseSource: loadNameOrUseSource
+	  return _extends({}, webpackConfig, /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lodash_object__["omit"].bind()(shortHandConfig, Object.keys(webpackConfig).concat('loaders')));
 	};
 
 /***/ },
@@ -685,24 +674,10 @@
 
 /***/ },
 
-/***/ 28:
-/***/ function(module, exports, __webpack_require__) {
+/***/ 276:
+/***/ function(module, exports) {
 
-	var getLoader = __webpack_require__(34).getLoader;
-	var getPlugin = __webpack_require__(44).getPlugin;
-	var getOutput = __webpack_require__(36).getOutput;
-	var getResolver = __webpack_require__(48).getResolver;
-	var getEntry = __webpack_require__(25).getEntry;
-	var getPostCSS = __webpack_require__(46).getPostCSS;
-
-	module.exports = {
-	  getLoader: getLoader,
-	  getPlugin: getPlugin,
-	  getOutput: getOutput,
-	  getResolver: getResolver,
-	  getEntry: getEntry,
-	  getPostCSS: getPostCSS
-	};
+	module.exports = require("lodash/object");
 
 /***/ },
 
@@ -763,7 +738,6 @@
 	  }
 
 	  if (typeof thing === 'function') {
-	    console.log('parsed', parsed);
 	    return thing(parsed.options);
 	  }
 
@@ -870,7 +844,7 @@
 
 
 	var getLoader = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('loader', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__CSS__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_2__ESNextReact__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_3__IgnoreStyles__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_4__JSON__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_5__Less__["a"]]);
-	/* harmony export */ Object.defineProperty(exports, "getLoader", {configurable: false, enumerable: true, get: function() { return getLoader; }});
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getLoader; }});
 
 /***/ },
 
@@ -909,7 +883,7 @@
 
 
 	var getOutput = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('output', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__Library__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_2__Simple__["a"]]);
-	/* harmony export */ Object.defineProperty(exports, "getOutput", {configurable: false, enumerable: true, get: function() { return getOutput; }});
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getOutput; }});
 
 /***/ },
 
@@ -945,7 +919,7 @@
 
 
 	var getPlugin = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('plugin', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__AbortIfErrors__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_2__BundleCommonChunks__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_3__EnableProductionLoaders__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_4__ExtractCSS__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_5__MinifyAndTreeShake__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_6__NodeExecutable__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_7__NodeLoadSourceMaps__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_8__SetNodeEnvironment__["a"]]);
-	/* harmony export */ Object.defineProperty(exports, "getPlugin", {configurable: false, enumerable: true, get: function() { return getPlugin; }});
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getPlugin; }});
 
 /***/ },
 
@@ -959,7 +933,7 @@
 
 
 	var getPostCSS = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('postcsshooks', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__Autoprefixer__["a"]]);
-	/* harmony export */ Object.defineProperty(exports, "getPostCSS", {configurable: false, enumerable: true, get: function() { return getPostCSS; }});
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getPostCSS; }});
 
 /***/ },
 
@@ -978,17 +952,20 @@
 
 
 	var getResolver = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lib_generators_tryToLoad__["a"].bind()('resolver', [/* harmony import */__WEBPACK_IMPORTED_MODULE_1__Modules__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_2__NPMAndModules__["a"], /* harmony import */__WEBPACK_IMPORTED_MODULE_3__Simple__["a"]]);
-	/* harmony export */ Object.defineProperty(exports, "getResolver", {configurable: false, enumerable: true, get: function() { return getResolver; }});
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getResolver; }});
 
 /***/ },
 
 /***/ 49:
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(0);
-	var fs = __webpack_require__(4);
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_fs__ = __webpack_require__(4);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_fs___default = __WEBPACK_IMPORTED_MODULE_0_fs__ && __WEBPACK_IMPORTED_MODULE_0_fs__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_fs__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_fs__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_fs___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_fs___default });
 
-	module.exports = function getTestFiles(dir, ext) {
+
+	var getTestFiles = function getTestFiles(dir, ext) {
 	  if (dir.indexOf('node_modules') > -1) {
 	    return;
 	  }
@@ -998,18 +975,18 @@
 
 	  var files = [];
 	  try {
-	    files = fs.readdirSync(dir);
+	    files = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_fs___default.a.readdirSync(dir);
 	  } catch (e) {
 	    files = [];
 	  }
 
 	  return files.map(function (file) {
-	    var path = dir + file;
+	    var path = '' + dir + file;
 
 	    try {
-	      var stats = fs.statSync(path);
+	      var stats = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_fs___default.a.statSync(path);
 	      if (stats.isDirectory()) {
-	        return getTestFiles(path + '/', ext);
+	        return getTestFiles(path + '/' + ext);
 	      }
 	      if (file.indexOf(ext) > -1) {
 	        return { file: file, path: path };
@@ -1021,13 +998,14 @@
 	  }).filter(function (x) {
 	    return x;
 	  }).reduce(function (prev, cur) {
-	    if (_.isArray(cur)) {
+	    if (Array.isArray(curr)) {
 	      return prev.concat(cur);
 	    } else {
 	      return prev.concat([cur]);
 	    }
 	  }, []);
 	};
+	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return getTestFiles; }});
 
 /***/ },
 
@@ -1041,56 +1019,98 @@
 /***/ 50:
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(0);
-	var fs = __webpack_require__(4);
-	var path = __webpack_require__(5);
-	var debug = __webpack_require__(17)('blueprints');
-	var Mocha = __webpack_require__(18);
-	var colors = __webpack_require__(16);
-	var rimraf = __webpack_require__(19);
+	"use strict";
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_colors__ = __webpack_require__(16);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_colors___default = __WEBPACK_IMPORTED_MODULE_0_colors__ && __WEBPACK_IMPORTED_MODULE_0_colors__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_colors__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_colors__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_colors___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_colors___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_debug__ = __webpack_require__(17);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_debug___default = __WEBPACK_IMPORTED_MODULE_1_debug__ && __WEBPACK_IMPORTED_MODULE_1_debug__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_1_debug__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_1_debug__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_1_debug___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_1_debug___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fs__ = __webpack_require__(4);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_fs___default = __WEBPACK_IMPORTED_MODULE_2_fs__ && __WEBPACK_IMPORTED_MODULE_2_fs__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_2_fs__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_2_fs__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_2_fs___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_2_fs___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lodash_object__ = __webpack_require__(276);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lodash_object___default = __WEBPACK_IMPORTED_MODULE_3_lodash_object__ && __WEBPACK_IMPORTED_MODULE_3_lodash_object__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_3_lodash_object__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_3_lodash_object__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_3_lodash_object___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_3_lodash_object___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_mocha__ = __webpack_require__(18);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_mocha___default = __WEBPACK_IMPORTED_MODULE_4_mocha__ && __WEBPACK_IMPORTED_MODULE_4_mocha__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_4_mocha__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_4_mocha__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_4_mocha___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_4_mocha___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_path__ = __webpack_require__(5);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_path___default = __WEBPACK_IMPORTED_MODULE_5_path__ && __WEBPACK_IMPORTED_MODULE_5_path__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_5_path__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_5_path__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_5_path___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_5_path___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rimraf__ = __webpack_require__(19);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rimraf___default = __WEBPACK_IMPORTED_MODULE_6_rimraf__ && __WEBPACK_IMPORTED_MODULE_6_rimraf__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_6_rimraf__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_6_rimraf__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_6_rimraf___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_6_rimraf___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_yargs__ = __webpack_require__(6);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_yargs___default = __WEBPACK_IMPORTED_MODULE_7_yargs__ && __WEBPACK_IMPORTED_MODULE_7_yargs__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_7_yargs__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_7_yargs__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_7_yargs___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_7_yargs___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_lib_build__ = __webpack_require__(11);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_lib_makeBuild__ = __webpack_require__(14);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_lib_configs__ = __webpack_require__(12);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_lib_configs___default = __WEBPACK_IMPORTED_MODULE_10_lib_configs__ && __WEBPACK_IMPORTED_MODULE_10_lib_configs__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_10_lib_configs__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_10_lib_configs__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_10_lib_configs___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_10_lib_configs___default });
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_lib_getWebpackEntryForTest__ = __webpack_require__(13);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var build = __webpack_require__(11);
-	var makeBuild = __webpack_require__(14).makeBuild;
-	var configs = __webpack_require__(12);
-	var getWebpackEntryForTest = __webpack_require__(13);
 
-	var yargs = __webpack_require__(6);
 
-	var argv = __webpack_require__(6).alias('b', 'blueprintsPath').describe('b', 'path to a raw-config via a node file with moduel.exports = config').default('b', './blueprints.config.js').alias('p', 'production').describe('p', 'enable production settings for the default build cofings').default('p', false).alias('c', 'client').describe('c', 'use the default client build, assumes you have an entry point to a client at ~/lib/client.[some es6.js or .js or .jsx]').default('c', false).alias('s', 'server').describe('s', 'use the default server build, assumes you have an entry point to a server at ~/lib/server[some es6.js or .js or .jsx]').default('s', false).alias('a', 'clientAndServer').describe('a', '[DEFAULT=true] use both a client and a server build. checks if you have an extend build and applies it.').default('a', true).alias('w', 'watch').describe('w', '[DEFAULT=false] force watching of all builds').default('w', false).alias('i', 'ignoreBlueprints').describe('ignore the blueprints.config.js file in the current directory and use defaults').default('i', false).alias('t', 'runTest').describe('search for test files and run them').default('t', false).argv;
 
-	console.log('...Reading Blueprints', argv.blueprintsPath);
-	console.log('...cwd', process.cwd());
 
-	function loadBuildsFromPath(configPath) {
+
+
+
+
+
+
+
+
+
+
+	var debug = /* harmony import */__WEBPACK_IMPORTED_MODULE_1_debug___default.a.bind()('blueprints');
+
+	/* eslint-disable max-len */
+	var argv = /* harmony import */__WEBPACK_IMPORTED_MODULE_7_yargs___default.a.alias('b', 'blueprintsPath').describe('b', 'path to a raw-config via a node file with moduel.exports = config').default('b', './blueprints.config.js').alias('p', 'production').describe('p', 'enable production settings for the default build cofings').default('p', false).alias('c', 'client').describe('c', 'use the default client build, assumes you have an entry point to a client at ~/lib/client.[some es6.js or .js or .jsx]').default('c', false).alias('s', 'server').describe('s', 'use the default server build, assumes you have an entry point to a server at ~/lib/server[some es6.js or .js or .jsx]').default('s', false).alias('a', 'clientAndServer').describe('a', '[DEFAULT=true] use both a client and a server build. checks if you have an extend build and applies it.').default('a', true).alias('w', 'watch').describe('w', '[DEFAULT=false] force watching of all builds').default('w', false).alias('i', 'ignoreBlueprints').describe('ignore the blueprints.config.js file in the current directory and use defaults').default('i', false).alias('t', 'runTest').describe('search for test files and run them').default('t', false).argv;
+	/* eslint-enable */
+
+	console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('[Blueprints] reading from ' + argv.blueprintsPath));
+	console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('[cwd] ' + process.cwd()));
+
+	var loadBuildsFromPath = function loadBuildsFromPath(configPath) {
 	  try {
-	    console.log('...loading bluerprints from', configPath);
-	    var builds = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-	    console.log('builds?', builds);
-	    if (!Array.isArray(builds)) {
-	      if (builds.extensions === true) {
-	        return { extensions: _.omit(builds, 'extensions') };
+	    conslole.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('..loading config ' + configPath));
+	    var _builds = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+	    if (!Array.isArray(_builds)) {
+	      if (_builds.extensions === true) {
+	        return { extensions: /* harmony import */__WEBPACK_IMPORTED_MODULE_3_lodash_object__["omit"].bind()(_builds, 'extensions') };
 	      }
-	      builds = [builds];
+	      _builds = [_builds];
 	    }
 
-	    return { builds: builds };
+	    return { builds: _builds };
 	  } catch (e) {
 	    debug(e);
 	    return {};
 	  }
-	}
+	};
 
-	function applyExtensions(builds, extensions) {
+	var applyExtensions = function applyExtensions(builds, extensions) {
 	  var ext = extensions || {};
-	  console.log('...applying extensions', extensions);
-	  return builds.map(function (build) {
-	    return _.merge(build, ext);
-	  });
-	}
+	  if (Object.keys(ext).length > 0) {
+	    /* eslint-disable max-len */
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('[extensions]') + ': ' + /* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.white(JSON.stringify(extensions, null, 2)));
+	    /* eslint-enable */
+	  }
 
-	function makeConfig(builds, extensions) {
-	  return { builds: applyExtensions(builds, extensions).map(makeBuild) };
-	}
+	  return builds.map(function (build) {
+	    return _extends({}, build, ext);
+	  });
+	};
+
+	var makeConfig = function makeConfig(builds, extensions) {
+	  return {
+	    builds: applyExtensions(builds, extensions).map(/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_makeBuild__["a"])
+	  };
+	};
 
 	var builds = [];
 	var extensions = {};
@@ -1104,23 +1124,23 @@
 	  }
 	}
 
-	function loadDefaultConfigs() {
-	  console.log('...using default configs');
+	var loadDefaultConfigs = function loadDefaultConfigs() {
+	  console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('..using default configs'));
 	  if (argv.runTest) {
-	    console.log('...Setting up tests:');
-	    builds = [configs.DefaultTestingConfig];
-	    builds[0].webpack.entry = getWebpackEntryForTest('./');
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.magenta('..Setting up tests:'));
+	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs___default.a.DefaultTestingConfig];
+	    builds[0].webpack.entry = /* harmony import */__WEBPACK_IMPORTED_MODULE_11_lib_getWebpackEntryForTest__["a"].bind()('./');
 	  } else if (argv.client) {
-	    console.log('...client');
-	    builds = [configs.getClientConfig(argv.production)];
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('..client'));
+	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs___default.a.getClientConfig(argv.production)];
 	  } else if (argv.server) {
-	    console.log('...server');
-	    builds = [configs.getServerConfig(argv.production)];
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('..server'));
+	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs___default.a.getServerConfig(argv.production)];
 	  } else if (argv.clientAndServer) {
-	    console.log('...both');
-	    builds = [configs.getClientConfig(argv.production), configs.getServerConfig(argv.production)];
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.blue('..both'));
+	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs___default.a.getClientConfig(argv.production), /* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs___default.a.getServerConfig(argv.production)];
 	  }
-	}
+	};
 
 	if (!builds.length) {
 	  loadDefaultConfigs();
@@ -1130,23 +1150,23 @@
 	  extensions.watch = true;
 	}
 
-	build(makeConfig(builds, extensions), function (stats) {
+	/* harmony import */__WEBPACK_IMPORTED_MODULE_8_lib_build__["a"].bind()(makeConfig(builds, extensions), function (stats) {
 	  if (stats.errors && stats.errors.length > 0 && !argv.watch) {
-	    console.log(colors.red('ERROR IN BUILD. Aborting.'));
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.red('ERROR IN BUILD. Aborting.'));
 
 	    process.exit(1);
 	  }
 
 	  if (argv.runTest) {
-	    console.log(colors.magenta('\n   ******************************' + '\n   *       RUNNING TESTS        *' + '\n   ******************************'));
+	    console.log(/* harmony import */__WEBPACK_IMPORTED_MODULE_0_colors___default.a.magenta('\n   ******************************' + '\n   *       RUNNING TESTS        *' + '\n   ******************************'));
 
-	    var m = new Mocha();
+	    var m = new /* harmony import */__WEBPACK_IMPORTED_MODULE_4_mocha___default.a();
 	    stats.assets.forEach(function (asset) {
 	      var path = './.test/' + asset.name;
 	      m.addFile(path);
 	    });
 	    m.run().on('end', function () {
-	      rimraf('./.test/', function () {});
+	      /* harmony import */__WEBPACK_IMPORTED_MODULE_6_rimraf___default.a.bind()('./.test/', function () {});
 	    });
 	  }
 	});

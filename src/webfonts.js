@@ -1,11 +1,18 @@
-var glob = require('glob');
-var path = require('path');
-var webfontsGenerator = require('webfonts-generator');
+import colors from 'colors';
+import glob from 'glob';
+import path from 'path';
+import webfontsGenerator from 'webfonts-generator';
 
-var SRC = path.resolve('./assets/svg/*.svg');
+const SRC = path.resolve('./assets/svg/*.svg');
 
-glob(SRC, function(error, files) {
-  console.log('generating font from:\n', files);
+glob(SRC, (error, files) => {
+  /* eslint-disable max-len */
+  console.log(`${colors.yellow('[Webfonts] generating from')} ${colors.white(JSON.stringify(files, null, 2))}`);
+  /* eslint-enable */
+
+  if (error) {
+    console.log(`${colors.red('[Error]')} ${colors.white(JSON.stringify(error, null, 2))}`);
+  }
 
   webfontsGenerator({
     files: files,
