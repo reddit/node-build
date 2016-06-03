@@ -123,10 +123,7 @@ var config = makeConfig(argv);
 
 build(config, function(stats) {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
-    console.log(colors.red(
-      'ERROR IN BUILD. Aborting.'
-    ));
-
+    console.log(colors.red('ERROR IN BUILD. Aborting.'));
     process.exit(1);
   }
 
@@ -137,14 +134,26 @@ build(config, function(stats) {
       '\n   ******************************'
     ));
 
-    var m = new Mocha();
+    m = new Mocha();
     stats.assets.forEach(function(asset) {
-      var path = './.test/' + asset.name;
-      m.addFile(path);
+      m.addFile('./.test/' + asset.name);
     });
-    m.run()
-      .on('end', function() {
-        rimraf('./.test/', function() {});
-      });
+    m.run();
+
+    // we want to remove these from the require cache while we have path
+    // references to them to ensure they get tested on the next rebuild
+    m.files.forEach(function(filePath) {
+      delete require.cache[require.resolve(path.resolve(filePath))];
+    });
+  }
+});
+
+// Hacky way to handle webpacks file output
+process.on('SIGINT', function() {
+  if (argv.runTest) {
+    var testDirectory = configs.DefaultTestingConfig.webpack.output.path;
+    rimraf(path.resolve(testDirectory), {}, process.exit);
+  } else {
+    process.exit();
   }
 });
