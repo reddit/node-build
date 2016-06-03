@@ -1198,32 +1198,81 @@ var SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE = require;
 	var argv = /* harmony import */__WEBPACK_IMPORTED_MODULE_6_yargs___default.a.alias('b', 'blueprintsPath').describe('b', 'path to a raw-config via a node file with moduel.exports = config').default('b', './blueprints.config.js').alias('p', 'production').describe('p', 'enable production settings for the default build cofings').default('p', false).alias('c', 'client').describe('c', 'use the default client build, assumes you have an entry point to a client at ~/lib/client.[some es6.js or .js or .jsx]').default('c', false).alias('s', 'server').describe('s', 'use the default server build, assumes you have an entry point to a server at ~/lib/server[some es6.js or .js or .jsx]').default('s', false).alias('a', 'clientAndServer').describe('a', '[DEFAULT=true] use both a client and a server build. checks if you have an extend build and applies it.').default('a', true).alias('w', 'watch').describe('w', '[DEFAULT=false] force watching of all builds').default('w', false).alias('i', 'ignoreBlueprints').describe('ignore the blueprints.config.js file in the current directory and use defaults').default('i', false).alias('t', 'runTest').describe('search for test files and run them').default('t', false).argv;
 	/* eslint-enable */
 
-	console.log(blue('[Blueprints] reading from ' + argv.blueprintsPath));
-	console.log(blue('[cwd] ' + process.cwd()));
-
-	var loadBuildsFromPath = function loadBuildsFromPath(configPath) {
+	var loadBuildsFromPath = function loadBuildsFromPath(filePath) {
 	  try {
-	    console.log(blue('..loading config ' + configPath));
+	    console.log(blue('..loading config ' + filePath));
 	    /* eslint-disable no-undef */
 	    // SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE is our hook outside of
 	    // webpack's normal requires -- webpack normally resolves requires at compile time
 	    // and turns require statments that are dynamic, or that it can't resolve, into error throwing
 	    // thunks. I tried doing this with require.ensure, and webpack turned that into
 	    // error throwing thunks as well, so this seems like the 'cleanest' solution.
-	    var _builds = SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE(/* harmony import */__WEBPACK_IMPORTED_MODULE_4_path___default.a.resolve(configPath));
+	    var builds = SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE(/* harmony import */__WEBPACK_IMPORTED_MODULE_4_path___default.a.resolve(filePath));
 	    /* eslint-enable */
-	    if (!Array.isArray(_builds)) {
-	      if (_builds.extensions === true) {
-	        return { extensions: /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lodash_object__["omit"].bind()(_builds, 'extensions') };
+	    if (!Array.isArray(builds)) {
+	      if (builds.extensions === true) {
+	        return { extensions: /* harmony import */__WEBPACK_IMPORTED_MODULE_0_lodash_object__["omit"].bind()(builds, 'extensions') };
 	      }
-	      _builds = [_builds];
+	      builds = [builds];
 	    }
 
-	    return { builds: _builds };
+	    return { builds: builds };
 	  } catch (e) {
 	    debug(e);
 	    return {};
 	  }
+	};
+
+	var loadDefaultConfigs = function loadDefaultConfigs(options) {
+	  console.log(blue('..using default configs'));
+	  if (options.runTest) {
+	    console.log(magenta('..Setting up tests:'));
+	    return [_extends({}, /* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs_Testing__["a"], {
+	      webpack: {
+	        entry: /* harmony import */__WEBPACK_IMPORTED_MODULE_11_lib_getWebpackEntryForTest__["a"].bind()('./')
+	      }
+	    })];
+	  } else if (options.client) {
+	    console.log(blue('..client'));
+	    return [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["a"].bind()(options.production)];
+	  } else if (options.server) {
+	    console.log(blue('..server'));
+	    return [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["b"].bind()(options.production)];
+	  } else if (options.clientAndServer) {
+	    console.log(blue('..both'));
+	    return [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["a"].bind()(options.production), /* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["b"].bind()(options.production)];
+	  }
+
+	  return [];
+	};
+
+	var makeConfig = function makeConfig(options) {
+	  console.log(blue('[Blueprints] reading from ' + options.blueprintsPath));
+	  console.log(blue('[cwd] ' + process.cwd()));
+
+	  var builds = [];
+	  var extensions = {};
+
+	  if (options.blueprintsPath && !options.ignoreBlueprints) {
+	    var blueprints = loadBuildsFromPath(options.blueprintsPath);
+	    if (blueprints.extensions) {
+	      extensions = blueprints.extensions;
+	    } else if (blueprints.builds && blueprints.builds.length) {
+	      builds = blueprints.builds;
+	    }
+	  }
+
+	  if (!builds.length) {
+	    loadDefaultConfigs();
+	  }
+
+	  if (options.watch) {
+	    extensions.watch = true;
+	  }
+
+	  return {
+	    builds: applyExtensions(builds, extensions).map(/* harmony import */__WEBPACK_IMPORTED_MODULE_8_lib_makeBuild__["a"])
+	  };
 	};
 
 	var applyExtensions = function applyExtensions(builds, extensions) {
@@ -1237,51 +1286,7 @@ var SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE = require;
 	  });
 	};
 
-	var makeConfig = function makeConfig(builds, extensions) {
-	  return {
-	    builds: applyExtensions(builds, extensions).map(/* harmony import */__WEBPACK_IMPORTED_MODULE_8_lib_makeBuild__["a"])
-	  };
-	};
-
-	var builds = [];
-	var extensions = {};
-
-	if (argv.blueprintsPath && !argv.ignoreBlueprints) {
-	  var blueprints = loadBuildsFromPath(argv.blueprintsPath);
-	  if (blueprints.extensions) {
-	    extensions = blueprints.extensions;
-	  } else if (blueprints.builds && blueprints.builds.length) {
-	    builds = blueprints.builds;
-	  }
-	}
-
-	var loadDefaultConfigs = function loadDefaultConfigs() {
-	  console.log(blue('..using default configs'));
-	  if (argv.runTest) {
-	    console.log(magenta('..Setting up tests:'));
-	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_10_lib_configs_Testing__["a"]];
-	    builds[0].webpack.entry = /* harmony import */__WEBPACK_IMPORTED_MODULE_11_lib_getWebpackEntryForTest__["a"].bind()('./');
-	  } else if (argv.client) {
-	    console.log(blue('..client'));
-	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["a"].bind()(argv.production)];
-	  } else if (argv.server) {
-	    console.log(blue('..server'));
-	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["b"].bind()(argv.production)];
-	  } else if (argv.clientAndServer) {
-	    console.log(blue('..both'));
-	    builds = [/* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["a"].bind()(argv.production), /* harmony import */__WEBPACK_IMPORTED_MODULE_9_lib_configs__["b"].bind()(argv.production)];
-	  }
-	};
-
-	if (!builds.length) {
-	  loadDefaultConfigs();
-	}
-
-	if (argv.watch) {
-	  extensions.watch = true;
-	}
-
-	/* harmony import */__WEBPACK_IMPORTED_MODULE_7_lib_build__["a"].bind()(makeConfig(builds, extensions), function (stats) {
+	/* harmony import */__WEBPACK_IMPORTED_MODULE_7_lib_build__["a"].bind()(makeConfig(argv), function (stats) {
 	  if (stats.errors && stats.errors.length > 0 && !argv.watch) {
 	    console.log(red('ERROR IN BUILD. Aborting.'));
 

@@ -45,19 +45,16 @@ const argv = yargs
   .argv;
 /* eslint-enable */
 
-console.log(blue(`[Blueprints] reading from ${argv.blueprintsPath}`));
-console.log(blue(`[cwd] ${process.cwd()}`));
-
-const loadBuildsFromPath = configPath => {
+const loadBuildsFromPath = filePath => {
   try {
-    console.log(blue(`..loading config ${configPath}`));
+    console.log(blue(`..loading config ${filePath}`));
     /* eslint-disable no-undef */
     // SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE is our hook outside of
     // webpack's normal requires -- webpack normally resolves requires at compile time
     // and turns require statments that are dynamic, or that it can't resolve, into error throwing
     // thunks. I tried doing this with require.ensure, and webpack turned that into
     // error throwing thunks as well, so this seems like the 'cleanest' solution.
-    let builds = SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE(path.resolve(configPath));
+    let builds = SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE(path.resolve(filePath));
     /* eslint-enable */
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
@@ -73,6 +70,64 @@ const loadBuildsFromPath = configPath => {
   }
 };
 
+const loadDefaultConfigs = options => {
+  console.log(blue('..using default configs'));
+  if (options.runTest) {
+    console.log(magenta('..Setting up tests:'));
+    return [{
+      ...TestingConfig,
+      ...{
+        webpack: {
+          entry: getWebpackEntryForTest('./'),
+        },
+      },
+    }];
+  } else if (options.client) {
+    console.log(blue('..client'));
+    return [ getClientConfig(options.production) ];
+  } else if (options.server) {
+    console.log(blue('..server'));
+    return [ getServerConfig(options.production) ];
+  } else if (options.clientAndServer) {
+    console.log(blue('..both'));
+    return [
+      getClientConfig(options.production),
+      getServerConfig(options.production),
+    ];
+  }
+
+  return [];
+};
+
+const makeConfig = options => {
+  console.log(blue(`[Blueprints] reading from ${options.blueprintsPath}`));
+  console.log(blue(`[cwd] ${process.cwd()}`));
+
+  let builds = [];
+  let extensions = {};
+
+  if (options.blueprintsPath && !options.ignoreBlueprints) {
+    const blueprints = loadBuildsFromPath(options.blueprintsPath);
+    if (blueprints.extensions) {
+      extensions = blueprints.extensions;
+    } else if (blueprints.builds && blueprints.builds.length) {
+      builds = blueprints.builds;
+    }
+  }
+
+  if (!builds.length) {
+    loadDefaultConfigs();
+  }
+
+  if (options.watch) {
+    extensions.watch = true;
+  }
+
+  return {
+    builds: applyExtensions(builds, extensions).map(makeBuild),
+  };
+};
+
 const applyExtensions = (builds, extensions) => {
   const ext = extensions || {};
   if (Object.keys(ext).length > 0) {
@@ -83,52 +138,7 @@ const applyExtensions = (builds, extensions) => {
   return builds.map(build => ({ ...build, ...ext }));
 };
 
-const makeConfig = (builds, extensions) => ({
-  builds: applyExtensions(builds, extensions).map(makeBuild),
-});
-
-let builds = [];
-let extensions = {};
-
-if (argv.blueprintsPath && !argv.ignoreBlueprints) {
-  const blueprints = loadBuildsFromPath(argv.blueprintsPath);
-  if (blueprints.extensions) {
-    extensions = blueprints.extensions;
-  } else if (blueprints.builds && blueprints.builds.length) {
-    builds = blueprints.builds;
-  }
-}
-
-const loadDefaultConfigs = () => {
-  console.log(blue('..using default configs'));
-  if (argv.runTest) {
-    console.log(magenta('..Setting up tests:'));
-    builds = [ TestingConfig ];
-    builds[0].webpack.entry = getWebpackEntryForTest('./');
-  } else if (argv.client) {
-    console.log(blue('..client'));
-    builds = [ getClientConfig(argv.production) ];
-  } else if (argv.server) {
-    console.log(blue('..server'));
-    builds = [ getServerConfig(argv.production) ];
-  } else if (argv.clientAndServer) {
-    console.log(blue('..both'));
-    builds = [
-      getClientConfig(argv.production),
-      getServerConfig(argv.production),
-    ];
-  }
-};
-
-if (!builds.length) {
-  loadDefaultConfigs();
-}
-
-if (argv.watch) {
-  extensions.watch = true;
-}
-
-build(makeConfig(builds, extensions), stats => {
+build(makeConfig(argv), stats => {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
     console.log(red(
       'ERROR IN BUILD. Aborting.'
