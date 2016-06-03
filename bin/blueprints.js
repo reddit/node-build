@@ -227,17 +227,17 @@ var SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE = require;
 	var build = function build(config, cb) {
 	  var callback = cb || function () {};
 	  var run = function run(build) {
-	    return exectuteBuild(build, callback);
+	    return executeBuild(build, callback);
 	  };
 	  config.builds.forEach(run);
 	};
 	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return build; }});
 
-	var exectuteBuild = function exectuteBuild(build, cb) {
-	  var compiler = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_webpack___default.a.bind()(build.webpackConfig);
+	var executeBuild = function executeBuild(build, cb) {
+	  var compiler = /* harmony import */__WEBPACK_IMPORTED_MODULE_0_webpack___default.a.bind()(build.wepback);
 	  if (build.watch) {
 	    compiler.watch({}, function (err, stats) {
-	      outputBuild(build.buildName)(err, stats);
+	      outputBuild(build.name)(err, stats);
 	      cb(stats.toJson());
 	    });
 
@@ -413,18 +413,18 @@ var SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE = require;
 
 
 
+	// ShortBuild is an object that looks like {
+	//  name: String,
+	//  watch: Bool,
+	//  webpack: Object, shorthand webpack config
+	//}
+
 	var makeBuild = function makeBuild(shortBuild) {
-	  return buildObject(shortBuild.name, shortBuild.watch, parseWebpackConfig(shortBuild.webpack, shortBuild.name));
+	  return _extends({}, shortBuild, {
+	    wepback: parseWebpackConfig(shortBuild.webpack, shortBuild.name)
+	  });
 	};
 	/* harmony export */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return makeBuild; }});
-
-	var buildObject = function buildObject(buildName, watch, webpackConfig) {
-	  return {
-	    watch: watch,
-	    buildName: buildName,
-	    webpackConfig: webpackConfig
-	  };
-	};
 
 	var mapNullable = function mapNullable(arrayOrNull, fn) {
 	  return (arrayOrNull || []).map(fn);
