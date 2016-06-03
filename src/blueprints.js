@@ -51,7 +51,14 @@ console.log(blue(`[cwd] ${process.cwd()}`));
 const loadBuildsFromPath = configPath => {
   try {
     console.log(blue(`..loading config ${configPath}`));
-    let builds = require(path.resolve(configPath));
+    /* eslint-disable no-undef */
+    // SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE is our hook outside of
+    // webpack's normal requires -- webpack normally resolves requires at compile time
+    // and turns require statments that are dynamic, or that it can't resolve, into error throwing
+    // thunks. I tried doing this with require.ensure, and webpack turned that into
+    // error throwing thunks as well, so this seems like the 'cleanest' solution.
+    let builds = SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE(path.resolve(configPath));
+    /* eslint-enable */
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
         return { extensions: omit(builds, 'extensions') };
@@ -69,9 +76,8 @@ const loadBuildsFromPath = configPath => {
 const applyExtensions = (builds, extensions) => {
   const ext = extensions || {};
   if (Object.keys(ext).length > 0) {
-    /* eslint-disable max-len */
-    console.log(`${blue('[extensions]')}: ${white(JSON.stringify(extensions, null, 2))}`);
-    /* eslint-enable */
+    console.log(`${blue('[extensions]')}: ${white(JSON.stringify(
+      extensions, null, 2))}`);
   }
 
   return builds.map(build => ({ ...build, ...ext }));
