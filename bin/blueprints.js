@@ -900,7 +900,7 @@ var SUPER_SECRET_REQUIRE_ONLY_CONFIG_LOADING_SHOULD_USE = require;
 
 
 
-	/* harmony default export */ exports["a"] = new /* harmony import */__WEBPACK_IMPORTED_MODULE_1_lib_generators__["a"]('extract-css', function () {
+	/* harmony default export */ exports["a"] = /* harmony import */__WEBPACK_IMPORTED_MODULE_1_lib_generators__["a"].bind()('extract-css', function () {
 	  return new /* harmony import */__WEBPACK_IMPORTED_MODULE_0_extract_text_webpack_plugin___default.a('[name].css');
 	});
 
