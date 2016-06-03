@@ -39,13 +39,10 @@ var argv = require('yargs')
     .default('t', false)
   .argv;
 
-console.log('...Reading Blueprints', argv.blueprintsPath);
-console.log('...cwd', process.cwd());
-
-function loadBuildsFromPath(configPath) {
+function loadBlueprintsFromPath(filePath) {
   try {
-    console.log('...loading bluerprints from', configPath)
-    var builds = require(path.resolve(configPath));
+    console.log('...loading blueprints from', filePath)
+    var builds = require(path.resolve(filePath));
     if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
         return { extensions: _.omit(builds, 'extensions') };
@@ -60,58 +57,71 @@ function loadBuildsFromPath(configPath) {
   }
 }
 
-function applyExtensions(builds, extensions) {
-  var ext = extensions || {};
-  console.log('...applying extensions', extensions);
-  return builds.map(function(build) { return _.merge(build, ext ); });
-}
-
-function makeConfig(builds, extensions) {
-  return { builds: applyExtensions(builds, extensions).map(makeBuild) };
-}
-
-var builds = [];
-var extensions = {};
-
-if (argv.blueprintsPath && !argv.ignoreBlueprints) {
-  var blueprints = loadBuildsFromPath(argv.blueprintsPath);
-  if (blueprints.extensions) {
-    extensions = blueprints.extensions;
-  } else if (blueprints.builds && blueprints.builds.length) {
-    builds = blueprints.builds;
-  }
-}
-
-function loadDefaultConfigs() {
+function loadDefaultConfigs(options) {
   console.log('...using default configs');
-  if (argv.runTest) {
+  if (options.runTest) {
     console.log('...Setting up tests:');
-    builds = [ configs.DefaultTestingConfig ];
-    builds[0].webpack.entry = getWebpackEntryForTest('./');
-  } else if (argv.client) {
+    var config = _.merge(
+      {},
+      configs.DefaultTestingConfig,
+      { webpack: { entry: getWebpackEntryForTest('./') } }
+    );
+    return [ config ];
+
+  } else if (options.client) {
     console.log('...client');
-    builds = [ configs.getClientConfig(argv.production) ];
-  } else if (argv.server) {
+    return [ configs.getClientConfig(options.production) ];
+
+  } else if (options.server) {
     console.log('...server');
-    builds = [ configs.getServerConfig(argv.production) ];
-  } else if (argv.clientAndServer) {
+    return [ configs.getServerConfig(options.production) ];
+
+  } else if (options.clientAndServer) {
     console.log('...both');
-    builds = [
-      configs.getClientConfig(argv.production),
-      configs.getServerConfig(argv.production),
+    return [
+      configs.getClientConfig(options.production),
+      configs.getServerConfig(options.production),
     ];
   }
 }
 
-if (!builds.length) {
-  loadDefaultConfigs();
-}
+function makeConfig(options) {
+  var builds;
+  var extensions = {};
 
-if (argv.watch) {
-  extensions.watch = true;
-}
+  if (options.blueprintsPath && !options.ignoreBlueprints) {
+    var blueprints = loadBlueprintsFromPath(options.blueprintsPath);
 
-build(makeConfig(builds, extensions), function(stats) {
+    if (blueprints.extensions) {
+      extensions = blueprints.extensions;
+
+    } else if (blueprints.builds && blueprints.builds.length) {
+      builds = blueprints.builds;
+    }
+  }
+
+  if (!builds) {
+    builds = loadDefaultConfigs(options);
+  }
+
+  if (options.watch) {
+    extensions.watch = true;
+  }
+
+  return {
+    builds: builds.map(function(build) {
+      return makeBuild(_.merge(build, extensions));
+    }),
+  };
+};
+
+
+console.log('...Reading Blueprints', argv.blueprintsPath);
+console.log('...cwd', process.cwd());
+
+var config = makeConfig(argv);
+
+build(config, function(stats) {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
     console.log(colors.red(
       'ERROR IN BUILD. Aborting.'
