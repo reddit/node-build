@@ -6,6 +6,7 @@ var debug = require('debug')('blueprints');
 var Mocha = require('mocha');
 var colors = require('colors');
 var rimraf = require('rimraf');
+var mochaNotifier = require('mocha-notifier-reporter');
 
 var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
@@ -134,7 +135,7 @@ build(config, function(stats) {
       '\n   ******************************'
     ));
 
-    m = new Mocha();
+    m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
     stats.assets.forEach(function(asset) {
       m.addFile('./.test/' + asset.name);
     });
