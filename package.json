@@ -38,6 +38,7 @@
     "babel-preset-stage-2": "^6.5.0",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "~2.0.0-beta",
+    "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "ignore-loader": "^0.1.1",
     "json-loader": "^0.5.4",
@@ -51,6 +52,7 @@
     "style-loader": "^0.13.1",
     "webfonts-generator": "^0.3.5",
     "webpack": "~2.1.0-beta.17",
+    "webpack-manifest-plugin": "^1.0.1",
     "yargs": "^4.6.0"
   },
   "devDependencies": {

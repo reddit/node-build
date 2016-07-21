@@ -2,7 +2,6 @@
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
-var debug = require('debug')('blueprints');
 var Mocha = require('mocha');
 var colors = require('colors');
 var rimraf = require('rimraf');
@@ -40,21 +39,31 @@ var argv = require('yargs')
     .default('t', false)
   .argv;
 
-function loadBlueprintsFromPath(filePath) {
+function loadBlueprintsFromPath(filePath, isProduction) {
   try {
     console.log('...loading blueprints from', filePath)
     var builds = require(path.resolve(filePath));
-    if (!Array.isArray(builds)) {
+
+    // build configuration files are written in js and can be:
+    //   a) a function that takes isProduction (boolean) and returns an array of builds
+    //   b) object with property named extensions, to extend / override default builds
+    //   c) an array of builds
+    // The array is most straightforward and the function seems infinitely
+    // more useful than the extensions object, and easier to understand. I'd
+    // like to deprecate the extensions object if its not being used in many places.
+    if (typeof builds === 'function') {
+      builds = builds(isProduction);
+    } else if (!Array.isArray(builds)) {
       if (builds.extensions === true) {
         return { extensions: _.omit(builds, 'extensions') };
       }
       builds = [builds];
     }
 
-    return { builds }
+    return { builds };
   } catch (e) {
-    debug(e);
-    return {};
+    console.log(colors.red('Error in loading blueprints'), e);
+    process.exit(1);
   }
 }
 
@@ -91,7 +100,7 @@ function makeConfig(options) {
   var extensions = {};
 
   if (options.blueprintsPath && !options.ignoreBlueprints) {
-    var blueprints = loadBlueprintsFromPath(options.blueprintsPath);
+    var blueprints = loadBlueprintsFromPath(options.blueprintsPath, options.production);
 
     if (blueprints.extensions) {
       extensions = blueprints.extensions;
