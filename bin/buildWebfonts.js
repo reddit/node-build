@@ -4,19 +4,18 @@ var path = require('path');
 var webfontsGenerator = require('webfonts-generator');
 
 var SRC = path.resolve('./assets/svg/*.svg');
+var ASSET_PATH = process.env.STATIC_BASE || '';
 
 glob(SRC, function(error, files) {
-  console.log('generating font from:\n', files);
-
   webfontsGenerator({
     files: files,
     dest: path.resolve('./assets/fonts'),
     fontName: 'rfont',
     css: true,
     cssDest: path.resolve('./assets/fonts/rfont.css'),
-    cssFontsUrl: '/fonts',
+    cssFontsUrl: ASSET_PATH + '/fonts',
     html: true,
     types: ['svg', 'ttf', 'woff', 'eot'],
     normalize: true,
-  })
+  });
 });
