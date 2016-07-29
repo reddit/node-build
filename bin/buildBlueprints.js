@@ -99,7 +99,7 @@ function makeConfig(options) {
   var builds;
   var extensions = {};
 
-  if (options.blueprintsPath && !options.ignoreBlueprints) {
+  if (options.blueprintsPath && !options.ignoreBlueprints && !options.runTest) {
     var blueprints = loadBlueprintsFromPath(options.blueprintsPath, options.production);
 
     if (blueprints.extensions) {
