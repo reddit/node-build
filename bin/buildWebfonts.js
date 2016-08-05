@@ -4,7 +4,6 @@ var path = require('path');
 var webfontsGenerator = require('webfonts-generator');
 
 var SRC = path.resolve('./assets/svg/*.svg');
-var ASSET_PATH = process.env.STATIC_BASE || '';
 
 glob(SRC, function(error, files) {
   webfontsGenerator({
@@ -13,7 +12,7 @@ glob(SRC, function(error, files) {
     fontName: 'rfont',
     css: true,
     cssDest: path.resolve('./assets/fonts/rfont.css'),
-    cssFontsUrl: ASSET_PATH + '/fonts',
+    cssFontsUrl: '/fonts',
     html: true,
     types: ['svg', 'ttf', 'woff', 'eot'],
     normalize: true,
