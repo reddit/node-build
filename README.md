@@ -65,3 +65,31 @@ module.exports = [{
 ## Future goals
 * automatically managing of peer-depedencies for smaller builds. Right now there's tree shaking and you can target UMD, but it'd be nice to see how far we can take the optimizations.
 * Self-hosting: build build with build, check in a compiled copy, which would be the in `/bin` and then write new developments of build in es6/7
+
+## Change log
+
+### 0.10.0
+
+Bug fixes
+
+- Fixed typo in production cli argument description
+- Fixed `getWebpackEntryForTest` logging the same location regardless of input
+
+Breaking changes
+
+- The following parameters are replaced by `-t --target`, which takes either
+`test`, `client`, `server` or `clientAndServer`. ex: `blueprints -t=test`:
+
+  `-c | --client`
+  `-s | --server`
+  `-a | --clientAndServer`
+  `-t | --runTest`
+
+- `-p | --production` is replaced by `-e | --env`.  ex: `blueprints -e=production`.
+- Changed the method signature of the blueprints config function export from
+    `function(isProduction)` to `function(options)` where `options` is an object
+    containing the options passed to the CLI.
+- Tests are no longer forced to use the default config
+- Any configs specified will be included when using `--target=test`. Use `-i` to
+    revert to the previous behavior.
+
