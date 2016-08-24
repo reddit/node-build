@@ -12,13 +12,8 @@ var build = require('../lib/build');
 var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
 var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
+var constants = require('../lib/constants');
 
-var PRODUCTION_ENV = 'production';
-var TARGETS = {
-  TEST: 'test',
-  CLIENT: 'client',
-  SERVER: 'server',
-};
 
 var argv = require('yargs')
   .alias('b', 'blueprintsPath')
@@ -68,9 +63,9 @@ function loadBlueprintsFromPath(options) {
 
 function loadDefaultConfigs(options) {
   console.log('...using default configs');
-  var isProduction = options.env === PRODUCTION_ENV;
+  var isProduction = options.env === constants.PRODUCTION_ENV;
   switch (options.target) {
-    case TARGETS.TEST:
+    case constants.TARGETS.TEST:
       console.log('...Setting up tests:');
       var config = _.merge(
         {},
@@ -79,10 +74,10 @@ function loadDefaultConfigs(options) {
       );
 
       return [ config ];
-    case TARGETS.CLIENT:
+    case constants.TARGETS.CLIENT:
       console.log('...client');
       return [ configs.getClientConfig(isProduction) ];
-    case TARGETS.SERVER:
+    case constants.TARGETS.SERVER:
       console.log('...server');
       return [ configs.getServerConfig(isProduction) ];
     default:
@@ -130,7 +125,7 @@ console.log('...Reading Blueprints', argv.blueprintsPath);
 console.log('...cwd', process.cwd());
 
 var config = makeConfig(argv);
-var isTest = argv.target === TARGETS.TEST;
+var isTest = argv.target === constants.TARGETS.TEST;
 
 build(config, function(stats) {
   if (stats.errors && stats.errors.length > 0 && !argv.watch) {
