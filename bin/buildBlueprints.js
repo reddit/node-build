@@ -148,9 +148,7 @@ build(config, function(stats) {
 
     m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
     glob(path.join(TEST_DIR, '/**/*.compiledtest'), function (err, files) {
-      files.forEach(function(asset) {
-        m.addFile(asset);
-      });
+      files.forEach(m.addFile.bind(m))
       m.run();
 
       // we want to remove these from the require cache while we have path
