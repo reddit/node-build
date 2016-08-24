@@ -167,7 +167,7 @@ build(config, function(stats) {
       try {
         rimraf.sync(path.join(process.cwd(), TEST_DIR));
       } catch (e) {
-        // pass
+        console.warn('unable to delete test artifacts: ', e.toString());
       }
 
       process.exit();
