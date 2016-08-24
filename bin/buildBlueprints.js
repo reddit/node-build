@@ -140,12 +140,18 @@ build(config, function(stats) {
       '\n   ******************************'
     ));
 
-    var testDirectories = config.builds.map(function(build) {
+    var testDirectories = _.uniq(config.builds.map(function(build) {
       return build.webpackConfig.output.path;
-    });
+    }));
+    var directoriesGlob = testDirectories.join(',');
+
+    // more than one directory needs to include a brace section (glob set).
+    if (testDirectories.length > 1) {
+      directoriesGlob = '{' + directoriesGlob + '}';
+    }
 
     m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
-    glob('{' + testDirectories.join(',') + '}/**/*.compiledtest', function (err, files) {
+    glob(directoriesGlob + '/**/*.compiledtest', function (err, files) {
       files.forEach(m.addFile.bind(m))
       m.run();
 
