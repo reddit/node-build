@@ -69,7 +69,7 @@ function loadBlueprintsFromPath(options) {
 
 function loadDefaultConfigs(options) {
   console.log('...using default configs');
-  var production = options.env === PRODUCTION_ENV;
+  var isProduction = options.env === PRODUCTION_ENV;
   switch (options.target) {
     case TARGETS.TEST:
       console.log('...Setting up tests:');
@@ -82,15 +82,15 @@ function loadDefaultConfigs(options) {
       return [ config ];
     case TARGETS.CLIENT:
       console.log('...client');
-      return [ configs.getClientConfig(production) ];
+      return [ configs.getClientConfig(isProduction) ];
     case TARGETS.SERVER:
       console.log('...server');
-      return [ configs.getServerConfig(production) ];
+      return [ configs.getServerConfig(isProduction) ];
     default:
       console.log('...both');
       return [
-        configs.getClientConfig(production),
-        configs.getServerConfig(production),
+        configs.getClientConfig(isProduction),
+        configs.getServerConfig(isProduction),
       ];
 
   }
