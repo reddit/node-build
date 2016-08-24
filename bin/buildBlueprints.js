@@ -13,7 +13,6 @@ var makeBuild = require('../lib/makeBuild').makeBuild;
 var configs = require('../lib/configs');
 var getWebpackEntryForTest = require('../lib/getWebpackEntryForTest');
 
-var TEST_DIR = './.test';
 var PRODUCTION_ENV = 'production';
 var TARGETS = {
   TEST: 'test',
@@ -146,8 +145,12 @@ build(config, function(stats) {
       '\n   ******************************'
     ));
 
+    var testDirectories = config.builds.map(function(build) {
+      return build.webpackConfig.output.path;
+    });
+
     m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
-    glob(path.join(TEST_DIR, '/**/*.compiledtest'), function (err, files) {
+    glob('{' + testDirectories.join(',') + '}/**/*.compiledtest', function (err, files) {
       files.forEach(m.addFile.bind(m))
       m.run();
 
@@ -165,7 +168,9 @@ build(config, function(stats) {
       }
 
       try {
-        rimraf.sync(path.join(process.cwd(), TEST_DIR));
+        testDirectories.forEach(function(dir) {
+          rimraf.sync(path.join(process.cwd(), dir));
+        });
       } catch (e) {
         console.warn('unable to delete test artifacts: ', e.toString());
       }
