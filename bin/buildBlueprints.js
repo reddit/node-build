@@ -150,21 +150,23 @@ build(config, function(stats) {
       directoriesGlob = '{' + directoriesGlob + '}';
     }
 
-    m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
+    var m = new Mocha({ reporter: mochaNotifier.decorate('spec') });
     glob(directoriesGlob + '/**/*.compiledtest', function (err, files) {
       files.forEach(m.addFile.bind(m))
-      m.run();
+      m.run(function(status) {
+        // we want to remove these from the require cache while we have path
+        // references to them to ensure they get tested on the next rebuild
+        m.files.forEach(function(filePath) {
+          delete require.cache[require.resolve(path.resolve(filePath))];
+        });
 
-      // we want to remove these from the require cache while we have path
-      // references to them to ensure they get tested on the next rebuild
-      m.files.forEach(function(filePath) {
-        delete require.cache[require.resolve(path.resolve(filePath))];
+        process.exit(status);
       });
     });
 
     // Hacky way to handle webpacks file output
     function cleanup(err) {
-      if (err) {
+      if (err && err instanceof Error) {
         console.error(err.stack);
       }
 
@@ -175,8 +177,6 @@ build(config, function(stats) {
       } catch (e) {
         console.warn('unable to delete test artifacts: ', e.toString());
       }
-
-      process.exit();
     }
 
     process.on('SIGINT', cleanup);
