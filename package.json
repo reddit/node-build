@@ -37,7 +37,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-2": "^6.5.0",
     "css-loader": "^0.23.1",
-    "extract-text-webpack-plugin": "~2.0.0-beta.3",
+    "extract-text-webpack-plugin": "2.0.0-beta.3",
     "file-loader": "^0.9.0",
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
@@ -52,7 +52,7 @@
     "rimraf": "^2.5.2",
     "style-loader": "^0.13.1",
     "webfonts-generator": "^0.3.5",
-    "webpack": "~2.1.0-beta.17",
+    "webpack": "2.1.0-beta.22",
     "webpack-manifest-plugin": "^1.0.1",
     "yargs": "^4.6.0"
   },
