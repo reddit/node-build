@@ -51,7 +51,7 @@
     "postcss-loader": "^0.9.1",
     "rimraf": "^2.5.2",
     "style-loader": "^0.13.1",
-    "webfonts-generator": "^0.3.5",
+    "webfonts-generator": "git://github.com/phil303/webfonts-generator.git#4917b32645e27170f5ea2209ce249b183c6bd2ed",
     "webpack": "2.1.0-beta.22",
     "webpack-manifest-plugin": "^1.0.1",
     "yargs": "^4.6.0"
