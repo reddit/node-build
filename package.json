@@ -54,6 +54,7 @@
     "webfonts-generator": "^0.3.5",
     "webpack": "2.1.0-beta.22",
     "webpack-manifest-plugin": "^1.0.1",
+    "superagent": "2.3.0",
     "yargs": "^4.6.0"
   },
   "devDependencies": {
