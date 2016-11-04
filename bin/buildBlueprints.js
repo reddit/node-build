@@ -146,7 +146,12 @@ function shouldUploadToSentry(sentryProject, buildName) {
 }
 
 build(config, function(buildName, stats) {
+  if (stats.errors && stats.errors.length > 0 && !argv.watch) {
+    console.log(colors.red('ERROR IN BUILD. Aborting.'));
+    process.exit(1);
+  }
 
+  // upload to Sentry if applicable
   var build = config[buildName];
   if (shouldUploadToSentry(build.sentryProject, buildName)) {
     var buildPath = build.webpackConfig.output.path;
@@ -155,11 +160,6 @@ build(config, function(buildName, stats) {
       .map(function(a) { return path.join(buildPath, a.name); });
 
     uploadToSentry(build.sentryProject, build.release, assets);
-  }
-
-  if (stats.errors && stats.errors.length > 0 && !argv.watch) {
-    console.log(colors.red('ERROR IN BUILD. Aborting.'));
-    process.exit(1);
   }
 
   if (argv.runTest) {
